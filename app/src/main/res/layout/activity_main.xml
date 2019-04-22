@@ -2,20 +2,33 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#eeeeee">
+    android:background="@color/white">
+
+    <com.codvision.figurinestore.utils.NormalToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/themeColor" />
 
     <FrameLayout
         android:id="@+id/main_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/menu_bar"></FrameLayout>
+        android:layout_above="@id/view_division"
+        android:layout_below="@id/toolbar" />
+
+    <View
+        android:id="@+id/view_division"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@id/ll_bottom"
+        android:background="@color/black" />
 
     <LinearLayout
-        android:id="@+id/menu_bar"
+        android:id="@+id/ll_bottom"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:background="#ddd"
         android:orientation="horizontal"
         android:padding="5dp">
 
@@ -64,11 +77,4 @@
             android:textSize="10sp" />
 
     </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#ddd" />
-
-
 </RelativeLayout>

@@ -1,4 +1,4 @@
-package com.codvision.figurinestore;
+package com.codvision.figurinestore.ui.fragment;
 
 
 import android.app.Fragment;
@@ -9,12 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.codvision.figurinestore.R;
 
-public class OrderFragment extends Fragment{
+
+public class MessageFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v=inflater.inflate(R.layout.fragment_order,container,false);
+        View v=inflater.inflate(R.layout.fragment_message,container,false);
         return v;
     }
 }
