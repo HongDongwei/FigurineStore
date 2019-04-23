@@ -1,5 +1,6 @@
 package com.codvision.figurinestore.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -17,27 +18,31 @@ public class NormalToolbar extends Toolbar {
 
     public static final String TAG = "MyToolBar";
     //布局
-    private LayoutInflater mInflater;
+    public LayoutInflater mInflater;
     //右边按钮
-    private ImageButton mRightButton;
+    public ImageButton mRightButton;
     //左边按钮
-    private ImageButton mLeftButton;
+    public ImageButton mLeftButton;
     //标题
-    private TextView mTextTitle;
+    public TextView mTextTitle;
 
     private View view;
 
+    private Context context;
+
     public NormalToolbar(Context context) {
         this(context, null);
+        this.context = context;
     }
 
     public NormalToolbar(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
+        this.context = context;
     }
 
-    public NormalToolbar(Context context, AttributeSet attrs, int defStyleAttr) {
+    public NormalToolbar(final Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
+        this.context = context;
         //初始化函数
         initView();
 
@@ -49,10 +54,11 @@ public class NormalToolbar extends Toolbar {
             setLeftButtonOnClickLinster(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     Log.i(TAG, "onClick: left ");
                 }
             });
-            setRightButtonIcon(R.drawable.message);//设置右图标
+            setRightButtonIcon(R.drawable.white_message);//设置右图标
             //设置点击事件
             setRightButtonOnClickLinster(new OnClickListener() {
                 @Override

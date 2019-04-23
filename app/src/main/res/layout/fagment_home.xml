@@ -1,14 +1,217 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:search="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/themeBgColor"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="home"
-        android:textColor="@color/black"
-        android:textSize="70sp" />
-</RelativeLayout>
+        android:background="@color/themeBgColor"
+        android:descendantFocusability="blocksDescendants"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/ll_home_search"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/search_bg"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_search_icon"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/search" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginTop="10dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/head" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="手办"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/head" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="模型"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/head" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="周边"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/head" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="全部分类"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_margin="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:layout_editor_absoluteX="8dp"
+                tools:layout_editor_absoluteY="0dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="35dip"
+                android:layout_gravity="bottom"
+                android:background="#33000000"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <TextView
+                    android:id="@+id/tv_pager_title"
+                    android:layout_width="0dp"
+                    android:layout_height="35dip"
+                    android:layout_weight="8"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="8dip"
+                    android:text="很长的标题。。。。。你懂我意思吧"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <TextView
+                android:id="@+id/tv_home_banner1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="推荐"
+                android:textColor="@color/tab_color_selector"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tv_home_banner2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="商品"
+                android:textColor="@color/tab_color_selector"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tv_home_banner3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="情报"
+                android:textColor="@color/tab_color_selector"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tv_home_banner4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="美图"
+                android:textColor="@color/tab_color_selector"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <com.codvision.figurinestore.utils.NoScrollGridView
+            android:id="@+id/gridview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:columnWidth="180dp"
+            android:numColumns="2"
+            android:stretchMode="spacingWidthUniform"
+            tools:listitem="@layout/gridview_item" />
+
+    </LinearLayout>
+</ScrollView>

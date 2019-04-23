@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".ui.activity.BuyDetailActivity">
+
+    <com.codvision.figurinestore.utils.NormalToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/themeColor" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/vp_bug_play"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/head"
+                tools:layout_editor_absoluteX="8dp"
+                tools:layout_editor_absoluteY="0dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="35dip"
+                android:layout_gravity="bottom"
+                android:background="#33000000"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <TextView
+                    android:id="@+id/tv_pager_title"
+                    android:layout_width="0dp"
+                    android:layout_height="35dip"
+                    android:layout_weight="8"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="8dip"
+                    android:text="很长的标题。。。。。你懂我意思吧"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:background="@color/themeColor"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical|right"
+                        android:text="价格："
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:gravity="center_vertical|left"
+                        android:text="$99"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal|bottom"
+                        android:text="截至时间:"
+                        android:textColor="@color/themeColor" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="12h"
+                        android:textColor="@color/themeColor" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="BANPRESTO（眼镜厂）我的英雄学院欧尔麦特 THE AMAZING HEROES Vo．5景品手办"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="80dp"
+                    android:gravity="center"
+                    android:text="已经没事了，要问为什么？因为我来了！！！"
+                    android:textColor="@color/grey"
+                    android:textSize="15sp" />
+
+                <ImageButton
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/back_right" />
+            </RelativeLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/message" />
+
+                    <ImageButton
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/order" />
+                </LinearLayout>
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="2"
+                    android:background="@drawable/button_bg"
+                    android:text="立即购买"
+                    android:textSize="15sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

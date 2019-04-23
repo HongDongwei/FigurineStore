@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:search="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <com.codvision.figurinestore.utils.CommolySearchView
+        android:id="@+id/csv_show"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_margin="8dip"
+        android:background="@drawable/search_bg"
+        search:SearchTextColor="#ff0000"
+        search:SearchTextSize="14sp" />
+
+
+    <ListView
+        android:id="@+id/lv_show"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></ListView>
+</LinearLayout>
