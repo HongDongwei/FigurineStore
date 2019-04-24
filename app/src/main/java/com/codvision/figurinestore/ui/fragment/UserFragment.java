@@ -22,6 +22,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.codvision.figurinestore.R;
+import com.codvision.figurinestore.api.StateApplication;
+import com.codvision.figurinestore.sqlite.DBServer;
+import com.codvision.figurinestore.sqlite.bean.User;
 import com.codvision.figurinestore.utils.DateTimeDialogOnlyYMD;
 
 import java.text.SimpleDateFormat;
@@ -41,7 +44,14 @@ public class UserFragment extends Fragment implements View.OnClickListener, Date
     private TextView tvNameChange;
     private TextView tvAgeChange;
     private TextView tvSignChange;
-    private String[] sexArry = new String[]{"?", "女", "男"};// 性别选择
+    private TextView tvIdChange;
+    private TextView tvMoneyChange;
+    private TextView tvUserName;
+    private TextView tvUserTel;
+    private TextView tvTelChange;
+    private DBServer db;
+    private User user;
+    private String[] sexArry = new String[]{"保密", "女", "男"};// 性别选择
     private int checkdItem = 0;
 
     private DateTimeDialogOnlyYMD dateTimeDialogOnlyYM;
@@ -66,8 +76,17 @@ public class UserFragment extends Fragment implements View.OnClickListener, Date
         tvNameChange = view.findViewById(R.id.tv_name_change);
         tvAgeChange = view.findViewById(R.id.tv_age_change);
         tvSignChange = view.findViewById(R.id.tv_sign_change);
+        tvIdChange = view.findViewById(R.id.tv_id_change);
+        tvMoneyChange = view.findViewById(R.id.tv_money_change);
+        tvUserName = view.findViewById(R.id.tv_user_name);
+        tvUserTel = view.findViewById(R.id.tv_user_tel);
+        tvTelChange = view.findViewById(R.id.tv_tel_change);
+
         dateTimeDialogOnlyYMD = new DateTimeDialogOnlyYMD(getActivity(), this, true, true, true);
         dateTimeDialogOnlyYM = new DateTimeDialogOnlyYMD(getActivity(), this, false, true, true);
+        db = new DBServer(getActivity());
+        user = db.getUser(StateApplication.USER);
+
     }
 
 
@@ -77,12 +96,37 @@ public class UserFragment extends Fragment implements View.OnClickListener, Date
         tvNameChange.setOnClickListener(this);
         tvAgeChange.setOnClickListener(this);
         tvSignChange.setOnClickListener(this);
+        tvTelChange.setOnClickListener(this);
         //初始化加载
         changeHeadPic(R.drawable.head);
-        tvNameChange.setText("咯咯的小跟班");
-        tvSexChange.setText("男");
-        tvSignChange.setText("世界聚焦777");
-        checkdItem = 2;
+        initDate();
+
+    }
+
+    private void initDate() {
+        tvIdChange.setText(user.getUserId());
+        tvNameChange.setText(user.getUserName());
+        tvUserName.setText(user.getUserName());
+        tvSexChange.setText(user.getUserSex());
+        tvSignChange.setText(user.getUserSign());
+        tvAgeChange.setText(user.getUserBirth());
+        tvMoneyChange.setText(user.getUserBalance());
+        tvUserTel.setText(user.getUserPhone());
+        tvTelChange.setText(user.getUserPhone());
+        switch (user.getUserSex()) {
+            case "保密":
+                checkdItem = 0;
+                break;
+            case "女":
+                checkdItem = 1;
+                break;
+            case "男":
+                checkdItem = 2;
+                break;
+            default:
+                break;
+        }
+        //
     }
 
     private void changeHeadPic(Object src) {
@@ -126,7 +170,9 @@ public class UserFragment extends Fragment implements View.OnClickListener, Date
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 // 获取edittext的内容,显示到textview
-                                tvNameChange.setText(userInput.getText());
+                                user.setUserName(userInput.getText().toString().trim());
+                                db.updateUserInfo(user);
+                                initDate();
                             }
                         })
                 .setNegativeButton("取消",
@@ -167,8 +213,9 @@ public class UserFragment extends Fragment implements View.OnClickListener, Date
                 .setPositiveButton("修改",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                // 获取edittext的内容,显示到textview
-                                tvSignChange.setText(userInput.getText());
+                                user.setUserSign(userInput.getText().toString().trim());
+                                db.updateUserInfo(user);
+                                initDate();
                             }
                         })
                 .setNegativeButton("取消",
@@ -185,6 +232,49 @@ public class UserFragment extends Fragment implements View.OnClickListener, Date
         alertDialog.show();
     }
 
+    private void onCreateTelDialog() {
+        // 使用LayoutInflater来加载dialog_setname.xml布局
+        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+        View nameView = layoutInflater.inflate(R.layout.dialog_setname, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+
+        // 使用setView()方法将布局显示到dialog
+        alertDialogBuilder.setView(nameView);
+
+        final EditText userInput = (EditText) nameView.findViewById(R.id.et_name_change);
+
+        SpannableString ss = new SpannableString("请输入您的电话");
+// 新建一个属性对象,设置文字的大小
+        AbsoluteSizeSpan ass = new AbsoluteSizeSpan(8, true);
+// 附加属性到文本
+        ss.setSpan(ass, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        userInput.setHint(new SpannedString(ss));
+        // 设置Dialog按钮
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("修改",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // 获取edittext的内容,显示到textview
+                                user.setUserPhone(userInput.getText().toString().trim());
+                                db.updateUserInfo(user);
+                                initDate();
+                            }
+                        })
+                .setNegativeButton("取消",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+    }
 
     private void showSexChooseDialog() {
         AlertDialog.Builder builder3 = new AlertDialog.Builder(getActivity());// 自定义对话框
@@ -192,8 +282,9 @@ public class UserFragment extends Fragment implements View.OnClickListener, Date
             @Override
             public void onClick(DialogInterface dialog, int which) {// which是被选中的位置
                 // showToast(which+"");
-                tvSexChange.setText(sexArry[which]);
-                checkdItem = which;
+                user.setUserSex(sexArry[which]);
+                db.updateUserInfo(user);
+                initDate();
                 dialog.dismiss();// 随便点击一个item消失对话框，不用点击确认取消
             }
         });
@@ -205,13 +296,18 @@ public class UserFragment extends Fragment implements View.OnClickListener, Date
     public void onDateSet(Date date, int type) {
         String str = mFormatter.format(date);
         String[] s = str.split("-");
+        String time = "";
         if (type == 1) {
-            tvAgeChange.setText(s[0]);
+            time = s[0];
         } else if (type == 2) {
-            tvAgeChange.setText(s[0] + "-" + s[1]);
+            time = s[0] + "-" + s[1];
+
         } else if (type == 3) {
-            tvAgeChange.setText(s[0] + "-" + s[1] + "-" + s[2]);
+            time = s[0] + "-" + s[1] + "-" + s[2];
         }
+        user.setUserBirth(time);
+        db.updateUserInfo(user);
+        initDate();
     }
 
     @Override
@@ -234,6 +330,9 @@ public class UserFragment extends Fragment implements View.OnClickListener, Date
                 break;
             case R.id.tv_sign_change:
                 onCreateSignDialog();
+                break;
+            case R.id.tv_tel_change:
+                onCreateTelDialog();
                 break;
             default:
                 break;

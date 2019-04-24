@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SimpleAdapter;
@@ -12,6 +13,9 @@ import android.widget.Toast;
 
 import com.codvision.figurinestore.adapter.ViewPagerAdapter;
 import com.codvision.figurinestore.R;
+import com.codvision.figurinestore.sqlite.DBServer;
+import com.codvision.figurinestore.sqlite.bean.Student;
+import com.codvision.figurinestore.sqlite.bean.User;
 import com.codvision.figurinestore.ui.fragment.HomeFragment;
 import com.codvision.figurinestore.utils.NormalToolbar;
 
@@ -20,7 +24,10 @@ import java.util.List;
 import java.util.Map;
 
 public class BuyDetailActivity extends AppCompatActivity {
-
+    /**
+     * TAG
+     */
+    public static final String TAG = "BuyDetailActivity";
     private NormalToolbar toolbar;
     private ViewPager vpBugPlay;
     private String[] from = {"img", "text", "price"};
@@ -32,6 +39,8 @@ public class BuyDetailActivity extends AppCompatActivity {
     private int previousPosition = 0;//前一个被选中的position
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +48,12 @@ public class BuyDetailActivity extends AppCompatActivity {
         initView();
         initEvent();
 
+
+
+
     }
+
+
 
     private void initView() {
         toolbar = findViewById(R.id.toolbar);
