@@ -19,13 +19,13 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // TODO Auto-generated method stub
-        String classesSQL = "CREATE TABLE classes(class_id varchar(10) primary key , " +
-                "class_name varchar(20))";
-
-        String studentsSQL = "CREATE TABLE students(student_id varchar(10) primary key , " +
-                "student_name varchar(20) ,score varchar(4) ,class_id varchar(10), " +
-                "foreign key (class_id) references classes(class_id) " +
-                "on delete cascade on update cascade )";
+//        String classesSQL = "CREATE TABLE classes(class_id varchar(10) primary key , " +
+//                "class_name varchar(20))";
+//
+//        String studentsSQL = "CREATE TABLE students(student_id varchar(10) primary key , " +
+//                "student_name varchar(20) ,score varchar(4) ,class_id varchar(10), " +
+//                "foreign key (class_id) references classes(class_id) " +
+//                "on delete cascade on update cascade )";
 
         String usersSQL = "CREATE TABLE users(user_id varchar(100) primary key , " +
                 "user_name varchar(100) ,user_pwd varchar(100) ,user_phone varchar(100) ,userp_sign varchar(100),user_pic varchar(100),user_sex varchar(100)," +
@@ -45,10 +45,6 @@ public class DBHelper extends SQLiteOpenHelper {
         ;
 
 
-        db.execSQL(classesSQL);
-        Log.d("my", "create table classes:" + classesSQL);
-        db.execSQL(studentsSQL);
-        Log.d("my", "create table students:" + studentsSQL);
         db.execSQL(usersSQL);
         Log.d("my", "create table users:" + usersSQL);
         db.execSQL(goodsSQL);

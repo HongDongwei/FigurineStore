@@ -37,7 +37,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="90dp"
             android:layout_marginTop="10dp">
 
             <LinearLayout
@@ -48,15 +48,17 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/iv_home_figurine"
                     android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:background="@drawable/head" />
+                    android:layout_height="60dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:gravity="center"
                     android:text="手办"
+                    android:textSize="12sp"
                     android:textColor="@color/black" />
             </LinearLayout>
 
@@ -68,15 +70,17 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/iv_home_model"
                     android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:background="@drawable/head" />
+                    android:layout_height="60dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:gravity="center"
                     android:text="模型"
+                    android:textSize="12sp"
                     android:textColor="@color/black" />
             </LinearLayout>
 
@@ -88,15 +92,17 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/iv_home_periphery"
                     android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:background="@drawable/head" />
+                    android:layout_height="60dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:gravity="center"
                     android:text="周边"
+                    android:textSize="12sp"
                     android:textColor="@color/black" />
             </LinearLayout>
 
@@ -108,54 +114,32 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/iv_home_all"
                     android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:background="@drawable/head" />
+                    android:layout_height="60dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:gravity="center"
                     android:text="全部分类"
+                    android:textSize="12sp"
                     android:textColor="@color/black" />
             </LinearLayout>
         </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="140dp"
+            android:layout_height="180dp"
             android:layout_margin="10dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-
-            <android.support.v4.view.ViewPager
-                android:id="@+id/viewPager"
+            <com.youth.banner.Banner
+                android:id="@+id/banner_home"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="0dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="35dip"
-                android:layout_gravity="bottom"
-                android:background="#33000000"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:weightSum="10">
-
-                <TextView
-                    android:id="@+id/tv_pager_title"
-                    android:layout_width="0dp"
-                    android:layout_height="35dip"
-                    android:layout_weight="8"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="8dip"
-                    android:text="很长的标题。。。。。你懂我意思吧"
-                    android:textColor="@color/white" />
-
-            </LinearLayout>
+                android:layout_height="match_parent" />
         </FrameLayout>
 
         <LinearLayout

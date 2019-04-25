@@ -12,7 +12,7 @@
         android:id="@+id/tv_login_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#1E7AD7"
+        android:background="@color/themeColor"
         android:gravity="center_horizontal"
         android:padding="19dp"
         android:text="账号密码登录"
@@ -20,12 +20,12 @@
 
     <ImageView
         android:id="@+id/iv_sip"
-        android:layout_width="153dp"
-        android:layout_height="153dp"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
         android:layout_below="@+id/tv_login_name"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="19dp"
-        android:background="@drawable/icon_sip" />
+        android:layout_marginTop="40dp"
+        android:background="@drawable/login_bg" />
 
     <LinearLayout
         android:id="@+id/rl_login_input"
@@ -79,45 +79,45 @@
     <TextView
         android:id="@+id/tv_login"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="35dp"
         android:layout_below="@+id/rl_login_input"
         android:layout_marginLeft="40dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="40dp"
         android:layout_marginRight="40dp"
         android:background="@drawable/login_click"
         android:clickable="false"
         android:gravity="center_horizontal|center_vertical"
         android:text="登录"
         android:textColor="#FFFFFF"
-        android:textSize="18sp" />
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/tv_register"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="35dp"
         android:layout_below="@+id/tv_login"
         android:layout_marginLeft="40dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="40dp"
         android:background="@drawable/login_click"
         android:clickable="false"
         android:gravity="center_horizontal|center_vertical"
         android:text="注册"
         android:textColor="#FFFFFF"
-        android:textSize="18sp" />
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/tv_delete"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="35dp"
         android:layout_below="@+id/tv_register"
         android:layout_marginLeft="40dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="40dp"
         android:background="@drawable/login_click"
         android:clickable="false"
         android:gravity="center_horizontal|center_vertical"
         android:text="删除"
         android:textColor="#FFFFFF"
-        android:textSize="18sp" />
+        android:textSize="15sp" />
 </RelativeLayout>

@@ -2,9 +2,12 @@ package com.codvision.figurinestore.ui.activity;
 
 
 import android.app.FragmentManager;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -17,6 +20,7 @@ import com.codvision.figurinestore.utils.NormalToolbar;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    public static final String TAG = "MainActivity";
     private TextView tvHome;
     private TextView tvMessage;
     private TextView tvOrder;
@@ -29,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FragmentManager fragmentManager;
 
     private NormalToolbar toolbar;
+    private SharedPreferences sp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         orderFragment = new OrderFragment();
         userFragment = new UserFragment();
         fragmentManager = getFragmentManager();
-        toolbar=findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
     }
 
     private void intiEvent() {
@@ -73,11 +79,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Drawable iconHome = getResources().getDrawable(R.drawable.home);
         iconHome.setBounds(0, 0, 80, 80);
         tvHome.setCompoundDrawables(null, iconHome, null, null);
+
         //首页
         fragmentManager.beginTransaction().replace(R.id.main_fragment, homeFragment).commit();
         setClick(tvHome);
+
         toolbar.setTitle("首页");
         toolbar.hideLeftButton();
+        sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("state", "true");
+        editor.commit();
+        Log.i(TAG, "uname: " + sp.getString("uname", null));
+        Log.i(TAG, "upswd: " + sp.getString("upswd", null));
+        Log.i(TAG, "state: " + sp.getString("state", null));
     }
 
     private void setClick(TextView textView) {

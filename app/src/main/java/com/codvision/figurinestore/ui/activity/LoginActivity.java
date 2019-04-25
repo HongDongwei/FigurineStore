@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.codvision.figurinestore.R;
 import com.codvision.figurinestore.api.StateApplication;
 import com.codvision.figurinestore.sqlite.DBServer;
+import com.codvision.figurinestore.sqlite.bean.Good;
 import com.codvision.figurinestore.sqlite.bean.User;
 
 import java.util.ArrayList;
@@ -32,8 +33,8 @@ public class LoginActivity extends AppCompatActivity {
     protected SipProfile account = null;
     SharedPreferences sp = null;
     private User user;
+
     private DBServer db;
-    List<User> localArrayList = new ArrayList<User>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,13 @@ public class LoginActivity extends AppCompatActivity {
         inputPassword = (TextInputLayout) findViewById(R.id.et_password);
 
         sp = this.getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+        if (sp.getString("state", null) != null) {
+            StateApplication.USER = sp.getString("uname", null);
+            StateApplication.PAD = sp.getString("upswd", null);
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+        }
+
 
         inputUser.getEditText().setText(sp.getString("uname", null));
         inputPassword.getEditText().setText(sp.getString("upswd", null));
@@ -116,7 +124,7 @@ public class LoginActivity extends AppCompatActivity {
                 editor.putString("upswd", StateApplication.PAD);
                 editor.commit();
                 if (db.isLoginExists(StateApplication.USER, StateApplication.PAD)) {
-                    localArrayList = db.findAllUsers();
+
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                 } else {
@@ -175,4 +183,6 @@ public class LoginActivity extends AppCompatActivity {
         user.setUserQrcode("");
         user.setUserBalance("0");
     }
+
+
 }

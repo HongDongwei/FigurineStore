@@ -2,8 +2,10 @@ package com.codvision.figurinestore.ui.fragment;
 
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -15,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -49,6 +52,7 @@ public class UserFragment extends Fragment implements View.OnClickListener, Date
     private TextView tvUserName;
     private TextView tvUserTel;
     private TextView tvTelChange;
+    private Button btLogout;
     private DBServer db;
     private User user;
     private String[] sexArry = new String[]{"保密", "女", "男"};// 性别选择
@@ -58,6 +62,7 @@ public class UserFragment extends Fragment implements View.OnClickListener, Date
     private DateTimeDialogOnlyYMD dateTimeDialogOnlyYMD;
     private DateTimeDialogOnlyYMD dateTimeDialogOnlyYear;
     private SimpleDateFormat mFormatter = new SimpleDateFormat("yyyy-MM-dd");
+    private SharedPreferences sp;
 
     @Nullable
     @Override
@@ -81,6 +86,7 @@ public class UserFragment extends Fragment implements View.OnClickListener, Date
         tvUserName = view.findViewById(R.id.tv_user_name);
         tvUserTel = view.findViewById(R.id.tv_user_tel);
         tvTelChange = view.findViewById(R.id.tv_tel_change);
+        btLogout = view.findViewById(R.id.bt_logout);
 
         dateTimeDialogOnlyYMD = new DateTimeDialogOnlyYMD(getActivity(), this, true, true, true);
         dateTimeDialogOnlyYM = new DateTimeDialogOnlyYMD(getActivity(), this, false, true, true);
@@ -97,6 +103,7 @@ public class UserFragment extends Fragment implements View.OnClickListener, Date
         tvAgeChange.setOnClickListener(this);
         tvSignChange.setOnClickListener(this);
         tvTelChange.setOnClickListener(this);
+        btLogout.setOnClickListener(this);
         //初始化加载
         changeHeadPic(R.drawable.head);
         initDate();
@@ -334,9 +341,39 @@ public class UserFragment extends Fragment implements View.OnClickListener, Date
             case R.id.tv_tel_change:
                 onCreateTelDialog();
                 break;
+            case R.id.bt_logout:
+                onCreateLogoutDialog();
+                break;
             default:
                 break;
         }
+    }
+
+    private void onCreateLogoutDialog() {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getActivity());
+        builder.setTitle("提示");
+        builder.setMessage("请确认是否退出登录？");
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                sp = getActivity().getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString("state", "");
+                editor.commit();
+                StateApplication.USER = "";
+                StateApplication.PAD = "";
+                getActivity().finish();
+
+            }
+        });
+        android.app.AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     @Override

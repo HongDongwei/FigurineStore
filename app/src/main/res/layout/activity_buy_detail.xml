@@ -28,34 +28,10 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/vp_bug_play"
+            <com.youth.banner.Banner
+                android:id="@+id/banner"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/head"
-                tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="0dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="35dip"
-                android:layout_gravity="bottom"
-                android:background="#33000000"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:weightSum="10">
-
-                <TextView
-                    android:id="@+id/tv_pager_title"
-                    android:layout_width="0dp"
-                    android:layout_height="35dip"
-                    android:layout_weight="8"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="8dip"
-                    android:text="很长的标题。。。。。你懂我意思吧"
-                    android:textColor="@color/white" />
-
-            </LinearLayout>
+                android:layout_height="match_parent" />
         </FrameLayout>
 
         <LinearLayout
@@ -82,15 +58,16 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical|right"
-                        android:text="价格："
+                        android:text="价格：$"
                         android:textSize="15sp" />
 
                     <TextView
+                        android:id="@+id/tv_good_price"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="2"
                         android:gravity="center_vertical|left"
-                        android:text="$99"
+                        android:text=""
                         android:textSize="15sp" />
                 </LinearLayout>
 
@@ -109,22 +86,21 @@
                         android:textColor="@color/themeColor" />
 
                     <TextView
+                        android:id="@+id/tv_good_time"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="12h"
                         android:textColor="@color/themeColor" />
                 </LinearLayout>
             </LinearLayout>
 
             <TextView
+                android:id="@+id/tv_good_name"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_margin="10dp"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:text="BANPRESTO（眼镜厂）我的英雄学院欧尔麦特 THE AMAZING HEROES Vo．5景品手办"
                 android:textColor="@color/black"
                 android:textSize="15sp" />
 
@@ -136,12 +112,14 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/tv_good_sign"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="80dp"
-                    android:gravity="center"
-                    android:text="已经没事了，要问为什么？因为我来了！！！"
+                    android:ellipsize="end"
+                    android:gravity="left|center_vertical"
+                    android:lines="1"
                     android:textColor="@color/grey"
                     android:textSize="15sp" />
 

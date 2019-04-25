@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.codvision.figurinestore.sqlite.bean.Good;
 import com.codvision.figurinestore.sqlite.bean.Student;
 import com.codvision.figurinestore.sqlite.bean.Class;
 import com.codvision.figurinestore.sqlite.bean.User;
@@ -17,38 +18,6 @@ public class DBServer {
 
     public DBServer(Context context) {
         this.dbhelper = new DBHelper(context);
-    }
-
-    /**
-     * 加入班级
-     *
-     * @param entity
-     */
-    public void addClass(Class entity) {
-
-        SQLiteDatabase localSQLiteDatabase = this.dbhelper.getWritableDatabase();
-        Object[] arrayOfObject = new Object[2];
-        arrayOfObject[0] = entity.getClassId();
-        arrayOfObject[1] = entity.getClassName();
-        localSQLiteDatabase.execSQL("insert into classes(class_id,class_name) values(?,?)", arrayOfObject);
-        localSQLiteDatabase.close();
-    }
-
-    /**
-     * 加入学生
-     *
-     * @param entity
-     */
-    public void addStudent(Student entity) {
-
-        SQLiteDatabase localSQLiteDatabase = this.dbhelper.getWritableDatabase();
-        Object[] arrayOfObject = new Object[4];
-        arrayOfObject[0] = entity.getStudentId();
-        arrayOfObject[1] = entity.getStudentName();
-        arrayOfObject[2] = entity.getScore();
-        arrayOfObject[3] = entity.getClassId();
-        localSQLiteDatabase.execSQL("insert into students(student_id,student_name,score,class_id) values(?,?,?,?)", arrayOfObject);
-        localSQLiteDatabase.close();
     }
 
     /**
@@ -76,34 +45,26 @@ public class DBServer {
     }
 
     /**
-     * 删除一个班级
-     * 同一时候会删除students中该班级的学生
+     * 加入用户
      *
-     * @param class_id
+     * @param entity
      */
-    public void deleteClass(String class_id) {
-        SQLiteDatabase localSQLiteDatabase = this.dbhelper.getWritableDatabase();
-        //设置了级联删除和级联更新
-        //在运行有级联关系的语句的时候必须先设置“PRAGMA foreign_keys=ON”
-        //否则级联关系默认失效
-        localSQLiteDatabase.execSQL("PRAGMA foreign_keys=ON");
-        Object[] arrayOfObject = new Object[1];
-        arrayOfObject[0] = class_id;
-        localSQLiteDatabase.execSQL("delete from classes where class_id=?", arrayOfObject);
-        localSQLiteDatabase.close();
-    }
+    public void addGood(Good entity) {
 
-
-    /**
-     * 删除一个学生
-     *
-     * @param student_id
-     */
-    public void deleteStudent(String student_id) {
         SQLiteDatabase localSQLiteDatabase = this.dbhelper.getWritableDatabase();
-        Object[] arrayOfObject = new Object[1];
-        arrayOfObject[0] = student_id;
-        localSQLiteDatabase.execSQL("delete from students where student_id=?", arrayOfObject);
+        Object[] arrayOfObject = new Object[10];
+        arrayOfObject[0] = entity.getGoodId();
+        arrayOfObject[1] = entity.getGoodName();
+        arrayOfObject[2] = entity.getGoodPrice();
+        arrayOfObject[3] = entity.getGoodPic1();
+        arrayOfObject[4] = entity.getGoodPic2();
+        arrayOfObject[5] = entity.getGoodPic3();
+        arrayOfObject[6] = entity.getGoodChoice();
+        arrayOfObject[7] = entity.getGoodSign();
+        arrayOfObject[8] = entity.getGoodType();
+        arrayOfObject[9] = entity.getGoodTime();
+
+        localSQLiteDatabase.execSQL("insert into goods(good_id,good_name,good_price,good_pic1,good_pic2,good_pic3,good_choice,good_sign,good_type,good_time) values(?,?,?,?,?,?,?,?,?,?)", arrayOfObject);
         localSQLiteDatabase.close();
     }
 
@@ -117,24 +78,6 @@ public class DBServer {
         Object[] arrayOfObject = new Object[1];
         arrayOfObject[0] = user_id;
         localSQLiteDatabase.execSQL("delete from users where user_id=?", arrayOfObject);
-        localSQLiteDatabase.close();
-    }
-
-    /**
-     * 改动学生信息
-     *
-     * @param entity
-     */
-    public void updateStudentInfo(Student entity) {
-        SQLiteDatabase localSQLiteDatabase = this.dbhelper.getWritableDatabase();
-        Object[] arrayOfObject = new Object[4];
-
-        arrayOfObject[0] = entity.getStudentName();
-        arrayOfObject[1] = entity.getScore();
-        arrayOfObject[2] = entity.getClassId();
-        arrayOfObject[3] = entity.getStudentId();
-
-        localSQLiteDatabase.execSQL("update students set student_name=?,score=?,class_id=?  where student_id=?", arrayOfObject);
         localSQLiteDatabase.close();
     }
 
@@ -208,48 +151,6 @@ public class DBServer {
         return localArrayList;
     }
 
-    /**
-     * 查找全部学生
-     *
-     * @return
-     */
-    public List<Student> findAllStudents() {
-        List<Student> localArrayList = new ArrayList<Student>();
-        SQLiteDatabase localSQLiteDatabase = this.dbhelper.getWritableDatabase();
-        Cursor localCursor = localSQLiteDatabase.rawQuery("select * from students " +
-                "where 1=1  order by score desc ", null);
-        while (localCursor.moveToNext()) {
-            Student temp = new Student();
-            temp.setStudentId(localCursor.getString(localCursor.getColumnIndex("student_id")));
-            temp.setStudentName(localCursor.getString(localCursor.getColumnIndex("student_name")));
-            temp.setScore(localCursor.getString(localCursor.getColumnIndex("score")));
-            temp.setClassId(localCursor.getString(localCursor.getColumnIndex("class_id")));
-            localArrayList.add(temp);
-        }
-        localSQLiteDatabase.close();
-        return localArrayList;
-    }
-
-
-    /**
-     * 取得全部班级
-     *
-     * @return
-     */
-    public List<Class> findAllClasses() {
-        List<Class> localArrayList = new ArrayList<Class>();
-        SQLiteDatabase localSQLiteDatabase = this.dbhelper.getWritableDatabase();
-        Cursor localCursor = localSQLiteDatabase.rawQuery("select * from classes " +
-                "where 1=1", null);
-        while (localCursor.moveToNext()) {
-            Class temp = new Class();
-            temp.setClassId(localCursor.getString(localCursor.getColumnIndex("class_id")));
-            temp.setClassName(localCursor.getString(localCursor.getColumnIndex("class_name")));
-            localArrayList.add(temp);
-        }
-        localSQLiteDatabase.close();
-        return localArrayList;
-    }
 
     /**
      * 查找全部用户
@@ -279,6 +180,33 @@ public class DBServer {
     }
 
     /**
+     * 查找全部商品
+     * * @return
+     */
+    public List<Good> findAllGoods() {
+        List<Good> localArrayList = new ArrayList<Good>();
+        SQLiteDatabase localSQLiteDatabase = this.dbhelper.getWritableDatabase();
+        Cursor localCursor = localSQLiteDatabase.rawQuery("select * from goods " +
+                "where 1=1", null);
+        while (localCursor.moveToNext()) {
+            Good temp = new Good();
+            temp.setGoodId(localCursor.getString(localCursor.getColumnIndex("good_id")));
+            temp.setGoodName(localCursor.getString(localCursor.getColumnIndex("good_name")));
+            temp.setGoodPrice(localCursor.getString(localCursor.getColumnIndex("good_price")));
+            temp.setGoodPic1(localCursor.getString(localCursor.getColumnIndex("good_pic1")));
+            temp.setGoodPic2(localCursor.getString(localCursor.getColumnIndex("good_pic2")));
+            temp.setGoodPic3(localCursor.getString(localCursor.getColumnIndex("good_pic3")));
+            temp.setGoodChoice(localCursor.getString(localCursor.getColumnIndex("good_choice")));
+            temp.setGoodSign(localCursor.getString(localCursor.getColumnIndex("good_sign")));
+            temp.setGoodType(localCursor.getString(localCursor.getColumnIndex("good_type")));
+            temp.setGoodTime(localCursor.getString(localCursor.getColumnIndex("good_time")));
+            localArrayList.add(temp);
+        }
+        localSQLiteDatabase.close();
+        return localArrayList;
+    }
+
+    /**
      * 成绩最好
      *
      * @return
@@ -296,40 +224,6 @@ public class DBServer {
         return temp;
     }
 
-
-    /**
-     * 查找是否有该学生
-     *
-     * @param studentId
-     * @return
-     */
-    public boolean isStudentsExists(String studentId) {
-        SQLiteDatabase localSQLiteDatabase = this.dbhelper.getWritableDatabase();
-        Cursor localCursor = localSQLiteDatabase.rawQuery("select count(*)  from students  " +
-                "where student_id=?", new String[]{studentId});
-        localCursor.moveToFirst();
-        if (localCursor.getLong(0) > 0)
-            return true;
-        else
-            return false;
-    }
-
-    /**
-     * 确认该班级是否存在
-     *
-     * @param classId
-     * @return
-     */
-    public boolean isClassExists(String classId) {
-        SQLiteDatabase localSQLiteDatabase = this.dbhelper.getWritableDatabase();
-        Cursor localCursor = localSQLiteDatabase.rawQuery("select count(*)  from classes  " +
-                "where class_id=? or class_name=?", new String[]{classId, classId});
-        localCursor.moveToFirst();
-        if (localCursor.getLong(0) > 0)
-            return true;
-        else
-            return false;
-    }
 
     /**
      * 确认该用户是否存在
@@ -355,25 +249,75 @@ public class DBServer {
      * @return
      */
     public User getUser(String UserId) {
-
+        User temp = new User();
         SQLiteDatabase localSQLiteDatabase = this.dbhelper.getWritableDatabase();
         Cursor localCursor = localSQLiteDatabase.rawQuery("select * from users  " +
                 "where user_id=? ", new String[]{UserId});
-        localCursor.moveToFirst();
-        User temp = new User();
-        temp.setUserId(localCursor.getString(localCursor.getColumnIndex("user_id")));
-        temp.setUserName(localCursor.getString(localCursor.getColumnIndex("user_name")));
-        temp.setUserPwd(localCursor.getString(localCursor.getColumnIndex("user_pwd")));
-        temp.setUserPhone(localCursor.getString(localCursor.getColumnIndex("user_phone")));
-        temp.setUserSign(localCursor.getString(localCursor.getColumnIndex("userp_sign")));
-        temp.setUserPic(localCursor.getString(localCursor.getColumnIndex("user_pic")));
-        temp.setUserSex(localCursor.getString(localCursor.getColumnIndex("user_sex")));
-        temp.setUserBirth(localCursor.getString(localCursor.getColumnIndex("user_birth")));
-        temp.setUserQrcode(localCursor.getString(localCursor.getColumnIndex("user_qrcode")));
-        temp.setUserBalance(localCursor.getString(localCursor.getColumnIndex("user_balance")));
+        if (localCursor.moveToFirst()) {
+            temp.setUserId(localCursor.getString(localCursor.getColumnIndex("user_id")));
+            temp.setUserName(localCursor.getString(localCursor.getColumnIndex("user_name")));
+            temp.setUserPwd(localCursor.getString(localCursor.getColumnIndex("user_pwd")));
+            temp.setUserPhone(localCursor.getString(localCursor.getColumnIndex("user_phone")));
+            temp.setUserSign(localCursor.getString(localCursor.getColumnIndex("userp_sign")));
+            temp.setUserPic(localCursor.getString(localCursor.getColumnIndex("user_pic")));
+            temp.setUserSex(localCursor.getString(localCursor.getColumnIndex("user_sex")));
+            temp.setUserBirth(localCursor.getString(localCursor.getColumnIndex("user_birth")));
+            temp.setUserQrcode(localCursor.getString(localCursor.getColumnIndex("user_qrcode")));
+            temp.setUserBalance(localCursor.getString(localCursor.getColumnIndex("user_balance")));
+        }
         return temp;
     }
 
+    /**
+     * 通过id查找商品
+     *
+     * @param goodId
+     * @return
+     */
+    public Good getGoodForId(String goodId) {
+        Good temp = new Good();
+        SQLiteDatabase localSQLiteDatabase = this.dbhelper.getWritableDatabase();
+        Cursor localCursor = localSQLiteDatabase.rawQuery("select * from goods  " +
+                "where good_id=? ", new String[]{goodId});
+        if (localCursor.moveToFirst()) {
+            temp.setGoodId(localCursor.getString(localCursor.getColumnIndex("good_id")));
+            temp.setGoodName(localCursor.getString(localCursor.getColumnIndex("good_name")));
+            temp.setGoodPrice(localCursor.getString(localCursor.getColumnIndex("good_price")));
+            temp.setGoodPic1(localCursor.getString(localCursor.getColumnIndex("good_pic1")));
+            temp.setGoodPic2(localCursor.getString(localCursor.getColumnIndex("good_pic2")));
+            temp.setGoodPic3(localCursor.getString(localCursor.getColumnIndex("good_pic3")));
+            temp.setGoodChoice(localCursor.getString(localCursor.getColumnIndex("good_choice")));
+            temp.setGoodSign(localCursor.getString(localCursor.getColumnIndex("good_sign")));
+            temp.setGoodType(localCursor.getString(localCursor.getColumnIndex("good_type")));
+            temp.setGoodTime(localCursor.getString(localCursor.getColumnIndex("good_time")));
+        }
+        return temp;
+    }
+    /**
+     * 通过type查找商品
+     *
+     * @param goodType
+     * @return
+     */
+    public Good getGoodForType(String goodType) {
+        Good temp = new Good();
+        SQLiteDatabase localSQLiteDatabase = this.dbhelper.getWritableDatabase();
+        Cursor localCursor = localSQLiteDatabase.rawQuery("select * from goods  " +
+                "where good_type=? ", new String[]{goodType});
+        if (localCursor.moveToFirst()) {
+            temp.setGoodId(localCursor.getString(localCursor.getColumnIndex("good_id")));
+            temp.setGoodName(localCursor.getString(localCursor.getColumnIndex("good_name")));
+            temp.setGoodPrice(localCursor.getString(localCursor.getColumnIndex("good_price")));
+            temp.setGoodPic1(localCursor.getString(localCursor.getColumnIndex("good_pic1")));
+            temp.setGoodPic2(localCursor.getString(localCursor.getColumnIndex("good_pic2")));
+            temp.setGoodPic3(localCursor.getString(localCursor.getColumnIndex("good_pic3")));
+            temp.setGoodChoice(localCursor.getString(localCursor.getColumnIndex("good_choice")));
+            temp.setGoodSign(localCursor.getString(localCursor.getColumnIndex("good_sign")));
+            temp.setGoodType(localCursor.getString(localCursor.getColumnIndex("good_type")));
+            temp.setGoodTime(localCursor.getString(localCursor.getColumnIndex("good_time")));
+        }
+        return temp;
+    }
     /**
      * 确认登录结果
      *
