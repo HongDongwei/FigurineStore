@@ -2,12 +2,9 @@ package com.codvision.figurinestore.ui.fragment;
 
 
 import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,14 +14,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.codvision.figurinestore.R;
-import com.codvision.figurinestore.adapter.ViewPagerAdapter;
+import com.codvision.figurinestore.ui.adapter.ViewPagerAdapter;
 import com.codvision.figurinestore.sqlite.DBServer;
 import com.codvision.figurinestore.sqlite.bean.Good;
 import com.codvision.figurinestore.ui.activity.BuyDetailActivity;
+import com.codvision.figurinestore.ui.activity.GoodsTypeActivity;
 import com.codvision.figurinestore.ui.activity.SearchActivity;
 import com.codvision.figurinestore.utils.GlideImageLoader;
 import com.codvision.figurinestore.utils.NoScrollGridView;
@@ -66,8 +63,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private DBServer db;
     private List<Good> goodList;
 
-    private String[] from = {"img", "text", "price"};
-    private int[] to = {R.id.img, R.id.text, R.id.price};
+    private String[] from = {"img", "text", "price", "click"};
+    private int[] to = {R.id.img, R.id.text, R.id.price, R.id.click};
     private List<Integer> images = new ArrayList<>();
     private List<String> titles = new ArrayList<>();
 
@@ -168,6 +165,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             map.put("img", getResources().getIdentifier(goodList.get(i).getGoodPic1(), "drawable", getActivity().getPackageName()));
             map.put("text", goodList.get(i).getGoodName());
             map.put("price", goodList.get(i).getGoodPrice());
+            map.put("click", goodList.get(i).getGoodChoice());
             dataList.add(map);
         }
     }
@@ -183,6 +181,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        Intent intent_type;
         switch (v.getId()) {
             case R.id.ll_home_search:
                 Intent intent = new Intent(getActivity(), SearchActivity.class);
@@ -201,16 +200,28 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 setClick(tvHomeBanner4);
                 break;
             case R.id.iv_home_figurine:
-
+                intent_type = new Intent();
+                intent_type.putExtra("goodType", "手办");//设置参数,""
+                intent_type.setClass(getActivity(), GoodsTypeActivity.class);//从哪里跳到哪里
+                getActivity().startActivity(intent_type);
                 break;
             case R.id.iv_home_model:
-
+                intent_type = new Intent();
+                intent_type.putExtra("goodType", "模型");//设置参数,""
+                intent_type.setClass(getActivity(), GoodsTypeActivity.class);//从哪里跳到哪里
+                getActivity().startActivity(intent_type);
                 break;
             case R.id.iv_home_periphery:
-
+                intent_type = new Intent();
+                intent_type.putExtra("goodType", "周边");//设置参数,""
+                intent_type.setClass(getActivity(), GoodsTypeActivity.class);//从哪里跳到哪里
+                getActivity().startActivity(intent_type);
                 break;
             case R.id.iv_home_all:
-
+                intent_type = new Intent();
+                intent_type.putExtra("goodType", "全部");//设置参数,""
+                intent_type.setClass(getActivity(), GoodsTypeActivity.class);//从哪里跳到哪里
+                getActivity().startActivity(intent_type);
                 break;
         }
     }

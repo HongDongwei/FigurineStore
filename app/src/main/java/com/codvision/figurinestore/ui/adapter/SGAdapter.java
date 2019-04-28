@@ -1,4 +1,4 @@
-package com.codvision.figurinestore.adapter;
+package com.codvision.figurinestore.ui.adapter;
 
 
 import android.content.Context;

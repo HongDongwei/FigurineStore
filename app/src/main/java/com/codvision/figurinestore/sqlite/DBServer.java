@@ -186,8 +186,59 @@ public class DBServer {
     public List<Good> findAllGoods() {
         List<Good> localArrayList = new ArrayList<Good>();
         SQLiteDatabase localSQLiteDatabase = this.dbhelper.getWritableDatabase();
-        Cursor localCursor = localSQLiteDatabase.rawQuery("select * from goods " +
-                "where 1=1", null);
+        Cursor localCursor = localSQLiteDatabase.rawQuery("select * from goods ", null);
+        while (localCursor.moveToNext()) {
+            Good temp = new Good();
+            temp.setGoodId(localCursor.getString(localCursor.getColumnIndex("good_id")));
+            temp.setGoodName(localCursor.getString(localCursor.getColumnIndex("good_name")));
+            temp.setGoodPrice(localCursor.getString(localCursor.getColumnIndex("good_price")));
+            temp.setGoodPic1(localCursor.getString(localCursor.getColumnIndex("good_pic1")));
+            temp.setGoodPic2(localCursor.getString(localCursor.getColumnIndex("good_pic2")));
+            temp.setGoodPic3(localCursor.getString(localCursor.getColumnIndex("good_pic3")));
+            temp.setGoodChoice(localCursor.getString(localCursor.getColumnIndex("good_choice")));
+            temp.setGoodSign(localCursor.getString(localCursor.getColumnIndex("good_sign")));
+            temp.setGoodType(localCursor.getString(localCursor.getColumnIndex("good_type")));
+            temp.setGoodTime(localCursor.getString(localCursor.getColumnIndex("good_time")));
+            localArrayList.add(temp);
+        }
+        localSQLiteDatabase.close();
+        return localArrayList;
+    }
+
+    /**
+     * 查找全部商品
+     * * @return
+     */
+    public List<Good> findAllGoodsByPrice() {
+        List<Good> localArrayList = new ArrayList<Good>();
+        SQLiteDatabase localSQLiteDatabase = this.dbhelper.getWritableDatabase();
+        Cursor localCursor = localSQLiteDatabase.rawQuery("select * from goods order by ABS(good_price) ", null);
+        while (localCursor.moveToNext()) {
+            Good temp = new Good();
+            temp.setGoodId(localCursor.getString(localCursor.getColumnIndex("good_id")));
+            temp.setGoodName(localCursor.getString(localCursor.getColumnIndex("good_name")));
+            temp.setGoodPrice(localCursor.getString(localCursor.getColumnIndex("good_price")));
+            temp.setGoodPic1(localCursor.getString(localCursor.getColumnIndex("good_pic1")));
+            temp.setGoodPic2(localCursor.getString(localCursor.getColumnIndex("good_pic2")));
+            temp.setGoodPic3(localCursor.getString(localCursor.getColumnIndex("good_pic3")));
+            temp.setGoodChoice(localCursor.getString(localCursor.getColumnIndex("good_choice")));
+            temp.setGoodSign(localCursor.getString(localCursor.getColumnIndex("good_sign")));
+            temp.setGoodType(localCursor.getString(localCursor.getColumnIndex("good_type")));
+            temp.setGoodTime(localCursor.getString(localCursor.getColumnIndex("good_time")));
+            localArrayList.add(temp);
+        }
+        localSQLiteDatabase.close();
+        return localArrayList;
+    }
+
+    /**
+     * 查找全部商品
+     * * @return
+     */
+    public List<Good> findAllGoodsByChoice() {
+        List<Good> localArrayList = new ArrayList<Good>();
+        SQLiteDatabase localSQLiteDatabase = this.dbhelper.getWritableDatabase();
+        Cursor localCursor = localSQLiteDatabase.rawQuery("select * from goods order by ABS(good_choice) ", null);
         while (localCursor.moveToNext()) {
             Good temp = new Good();
             temp.setGoodId(localCursor.getString(localCursor.getColumnIndex("good_id")));
@@ -293,18 +344,20 @@ public class DBServer {
         }
         return temp;
     }
+
     /**
      * 通过type查找商品
      *
      * @param goodType
      * @return
      */
-    public Good getGoodForType(String goodType) {
-        Good temp = new Good();
+    public List<Good> getGoodForType(String goodType) {
+        List<Good> localArrayList = new ArrayList<Good>();
         SQLiteDatabase localSQLiteDatabase = this.dbhelper.getWritableDatabase();
         Cursor localCursor = localSQLiteDatabase.rawQuery("select * from goods  " +
                 "where good_type=? ", new String[]{goodType});
-        if (localCursor.moveToFirst()) {
+        while (localCursor.moveToNext()) {
+            Good temp = new Good();
             temp.setGoodId(localCursor.getString(localCursor.getColumnIndex("good_id")));
             temp.setGoodName(localCursor.getString(localCursor.getColumnIndex("good_name")));
             temp.setGoodPrice(localCursor.getString(localCursor.getColumnIndex("good_price")));
@@ -315,9 +368,70 @@ public class DBServer {
             temp.setGoodSign(localCursor.getString(localCursor.getColumnIndex("good_sign")));
             temp.setGoodType(localCursor.getString(localCursor.getColumnIndex("good_type")));
             temp.setGoodTime(localCursor.getString(localCursor.getColumnIndex("good_time")));
+            localArrayList.add(temp);
         }
-        return temp;
+        localSQLiteDatabase.close();
+        return localArrayList;
     }
+
+    /**
+     * 通过type查找商品,并排序
+     *
+     * @param goodType
+     * @return
+     */
+    public List<Good> getGoodForTypeByPrice(String goodType) {
+        List<Good> localArrayList = new ArrayList<Good>();
+        SQLiteDatabase localSQLiteDatabase = this.dbhelper.getWritableDatabase();
+        Cursor localCursor = localSQLiteDatabase.rawQuery("select * from goods  " +
+                "where good_type=? order by ABS(good_price)", new String[]{goodType});
+        while (localCursor.moveToNext()) {
+            Good temp = new Good();
+            temp.setGoodId(localCursor.getString(localCursor.getColumnIndex("good_id")));
+            temp.setGoodName(localCursor.getString(localCursor.getColumnIndex("good_name")));
+            temp.setGoodPrice(localCursor.getString(localCursor.getColumnIndex("good_price")));
+            temp.setGoodPic1(localCursor.getString(localCursor.getColumnIndex("good_pic1")));
+            temp.setGoodPic2(localCursor.getString(localCursor.getColumnIndex("good_pic2")));
+            temp.setGoodPic3(localCursor.getString(localCursor.getColumnIndex("good_pic3")));
+            temp.setGoodChoice(localCursor.getString(localCursor.getColumnIndex("good_choice")));
+            temp.setGoodSign(localCursor.getString(localCursor.getColumnIndex("good_sign")));
+            temp.setGoodType(localCursor.getString(localCursor.getColumnIndex("good_type")));
+            temp.setGoodTime(localCursor.getString(localCursor.getColumnIndex("good_time")));
+            localArrayList.add(temp);
+        }
+        localSQLiteDatabase.close();
+        return localArrayList;
+    }
+
+    /**
+     * 通过type查找商品,并排序
+     *
+     * @param goodType
+     * @return
+     */
+    public List<Good> getGoodForTypeByChoice(String goodType) {
+        List<Good> localArrayList = new ArrayList<Good>();
+        SQLiteDatabase localSQLiteDatabase = this.dbhelper.getWritableDatabase();
+        Cursor localCursor = localSQLiteDatabase.rawQuery("select * from goods  " +
+                "where good_type=? order by ABS(good_choice)", new String[]{goodType});
+        while (localCursor.moveToNext()) {
+            Good temp = new Good();
+            temp.setGoodId(localCursor.getString(localCursor.getColumnIndex("good_id")));
+            temp.setGoodName(localCursor.getString(localCursor.getColumnIndex("good_name")));
+            temp.setGoodPrice(localCursor.getString(localCursor.getColumnIndex("good_price")));
+            temp.setGoodPic1(localCursor.getString(localCursor.getColumnIndex("good_pic1")));
+            temp.setGoodPic2(localCursor.getString(localCursor.getColumnIndex("good_pic2")));
+            temp.setGoodPic3(localCursor.getString(localCursor.getColumnIndex("good_pic3")));
+            temp.setGoodChoice(localCursor.getString(localCursor.getColumnIndex("good_choice")));
+            temp.setGoodSign(localCursor.getString(localCursor.getColumnIndex("good_sign")));
+            temp.setGoodType(localCursor.getString(localCursor.getColumnIndex("good_type")));
+            temp.setGoodTime(localCursor.getString(localCursor.getColumnIndex("good_time")));
+            localArrayList.add(temp);
+        }
+        localSQLiteDatabase.close();
+        return localArrayList;
+    }
+
     /**
      * 确认登录结果
      *

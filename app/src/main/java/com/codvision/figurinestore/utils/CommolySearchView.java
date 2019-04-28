@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -19,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.bumptech.glide.util.Util;
 import com.codvision.figurinestore.R;
 
 import java.util.ArrayList;
@@ -157,6 +159,27 @@ public class CommolySearchView<T> extends LinearLayout {
         // 绑定布局文件
         LayoutInflater.from(context).inflate(R.layout.searchview_layout, this);
         initView();
+    }
+
+    public String getText() {
+        if (TextUtils.isEmpty(mEditText.getText()) && mEditText == null) {
+            return "没有数据";
+        }
+        return mEditText.getText().toString();
+
+    }
+
+    public void setText(String text) {
+        if (mEditText != null) {
+            text = text.substring(0, text.length() - 1);
+            mEditText.setText(text);
+        }
+    }
+
+    public void setSelection() {
+        if (mEditText != null) {
+            mEditText.setSelection(mEditText.length());
+        }
     }
 
     /**

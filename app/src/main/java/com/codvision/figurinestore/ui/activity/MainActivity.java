@@ -67,18 +67,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvOrder.setOnClickListener(this);
         tvUser.setOnClickListener(this);
 
-        Drawable iconUser = getResources().getDrawable(R.drawable.user);
-        iconUser.setBounds(0, 0, 80, 80);
-        tvUser.setCompoundDrawables(null, iconUser, null, null);
-        Drawable iconMessage = getResources().getDrawable(R.drawable.message);
-        iconMessage.setBounds(0, 0, 80, 80);
-        tvMessage.setCompoundDrawables(null, iconMessage, null, null);
-        Drawable iconOrder = getResources().getDrawable(R.drawable.order);
-        iconOrder.setBounds(0, 0, 80, 80);
-        tvOrder.setCompoundDrawables(null, iconOrder, null, null);
-        Drawable iconHome = getResources().getDrawable(R.drawable.home);
-        iconHome.setBounds(0, 0, 80, 80);
-        tvHome.setCompoundDrawables(null, iconHome, null, null);
 
         //首页
         fragmentManager.beginTransaction().replace(R.id.main_fragment, homeFragment).commit();
@@ -100,6 +88,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvMessage.setSelected(false);
         tvOrder.setSelected(false);
         tvUser.setSelected(false);
+
+        Drawable iconUser = getResources().getDrawable(R.drawable.user_unclick);
+        iconUser.setBounds(0, 0, 80, 80);
+        tvUser.setCompoundDrawables(null, iconUser, null, null);
+        Drawable iconMessage = getResources().getDrawable(R.drawable.message_unclick);
+        iconMessage.setBounds(0, 0, 80, 80);
+        tvMessage.setCompoundDrawables(null, iconMessage, null, null);
+        Drawable iconOrder = getResources().getDrawable(R.drawable.order_unclick);
+        iconOrder.setBounds(0, 0, 80, 80);
+        tvOrder.setCompoundDrawables(null, iconOrder, null, null);
+        Drawable iconHome = getResources().getDrawable(R.drawable.home_unclick);
+        iconHome.setBounds(0, 0, 80, 80);
+        tvHome.setCompoundDrawables(null, iconHome, null, null);
+
+        switch (textView.getId()) {
+            case R.id.tv_home:
+                iconHome = getResources().getDrawable(R.drawable.home_click);
+                iconHome.setBounds(0, 0, 80, 80);
+                tvHome.setCompoundDrawables(null, iconHome, null, null);
+
+                break;
+            case R.id.tv_message:
+                iconMessage = getResources().getDrawable(R.drawable.message_click);
+                iconMessage.setBounds(0, 0, 80, 80);
+                tvMessage.setCompoundDrawables(null, iconMessage, null, null);
+                break;
+            case R.id.tv_order:
+                iconOrder = getResources().getDrawable(R.drawable.order_click);
+                iconOrder.setBounds(0, 0, 80, 80);
+                tvOrder.setCompoundDrawables(null, iconOrder, null, null);
+                break;
+            case R.id.tv_user:
+                iconUser = getResources().getDrawable(R.drawable.user_click);
+                iconUser.setBounds(0, 0, 80, 80);
+                tvUser.setCompoundDrawables(null, iconUser, null, null);
+                break;
+        }
         textView.setSelected(true);
     }
 

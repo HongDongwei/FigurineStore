@@ -166,14 +166,14 @@ public class LoginActivity extends AppCompatActivity {
 
     private void initUser() {
         user = new User();
-//        user.setUserName("");
-//        user.setUserPhone("");
-//        user.setUserSign("");
-//        user.setUserPic("");
-//        user.setUserSex("");
-//        user.setUserBirth("");
-//        user.setUserQrcode("");
-//        user.setUserBalance("");
+//        user_unclick.setUserName("");
+//        user_unclick.setUserPhone("");
+//        user_unclick.setUserSign("");
+//        user_unclick.setUserPic("");
+//        user_unclick.setUserSex("");
+//        user_unclick.setUserBirth("");
+//        user_unclick.setUserQrcode("");
+//        user_unclick.setUserBalance("");
         user.setUserName("暂无");
         user.setUserPhone("暂无");
         user.setUserSign("这个人很懒，什么都没有留下！");

@@ -6,14 +6,33 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <com.codvision.figurinestore.utils.CommolySearchView
-        android:id="@+id/csv_show"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_margin="8dip"
-        android:background="@drawable/search_bg"
-        search:SearchTextColor="#ff0000"
-        search:SearchTextSize="14sp" />
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/ib_search_voice"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/microphone" />
+
+        <ImageButton
+            android:id="@+id/ib_search_hear"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/wheat_blue" />
+
+        <com.codvision.figurinestore.utils.CommolySearchView
+            android:id="@+id/csv_show"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/search_bg"
+            search:SearchTextColor="@color/themeColor"
+            search:SearchTextSize="14sp" />
+
+    </LinearLayout>
 
 
     <ListView
