@@ -12,63 +12,6 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/iv_user_bg"
-                android:layout_width="match_parent"
-                android:layout_height="180dp" />
-
-            <ImageView
-                android:id="@+id/iv_user_head"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_centerInParent="true" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/iv_user_bg"
-                android:layout_marginBottom="20dp"
-                android:gravity="center_horizontal">
-
-
-                <TextView
-                    android:id="@+id/tv_user_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@id/iv_user_line"
-                    android:text="张三"
-                    android:textColor="@color/black"
-                    android:textSize="17sp" />
-
-                <ImageView
-                    android:id="@+id/iv_user_line"
-                    android:layout_width="1dp"
-                    android:layout_height="25dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginLeft="5dp"
-                    android:background="@color/black" />
-
-                <TextView
-                    android:id="@+id/tv_user_tel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_toRightOf="@id/iv_user_line"
-                    android:text="182****5882"
-                    android:textColor="@color/black"
-                    android:textSize="17sp" />
-            </RelativeLayout>
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/grey" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
             android:layout_height="80dp"
             android:gravity="center_vertical">
 
@@ -104,35 +47,6 @@
             android:layout_height="1dp"
             android:background="@color/grey" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:gravity="center_vertical"
-                android:text="ID"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/tv_id_change"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
-                android:gravity="center_vertical"
-                android:text="12345678"
-                android:textColor="@color/grey" />
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/grey" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -153,18 +67,18 @@
                 android:layout_width="150dp"
                 android:layout_height="match_parent"
                 android:layout_marginRight="9dp"
-                android:layout_toLeftOf="@+id/iv_money_right"
+                android:layout_toLeftOf="@+id/tv_money_right"
                 android:gravity="center_vertical|right"
                 android:textColor="@color/grey" />
 
-            <ImageView
-                android:id="@+id/iv_money_right"
+            <TextView
+                android:id="@+id/tv_money_right"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dp"
-                android:background="@drawable/back_right" />
+                android:text="元"/>
         </RelativeLayout>
 
         <View
@@ -228,19 +142,11 @@
                 android:id="@+id/tv_name_change"
                 android:layout_width="150dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="9dp"
-                android:layout_toLeftOf="@+id/iv_name_right"
+                android:layout_marginRight="39dp"
                 android:gravity="center_vertical|right"
+                android:layout_alignParentRight="true"
                 android:textColor="@color/grey" />
 
-            <ImageView
-                android:id="@+id/iv_name_right"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/back_right" />
         </RelativeLayout>
 
         <View
@@ -286,43 +192,6 @@
             android:layout_height="1dp"
             android:background="@color/grey" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:gravity="center_vertical"
-                android:text="出生年月"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/tv_age_change"
-                android:layout_width="150dp"
-                android:layout_height="match_parent"
-                android:layout_marginRight="9dp"
-                android:layout_toLeftOf="@+id/iv_age_right"
-                android:gravity="center_vertical|right"
-                android:textColor="@color/grey" />
-
-            <ImageView
-                android:id="@+id/iv_age_right"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/back_right" />
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/grey" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -372,22 +241,21 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
                 android:gravity="center_vertical"
-                android:text="二维码"
+                android:text="地址"
                 android:textColor="@color/black"
                 android:textSize="15sp" />
 
-            <ImageView
-                android:id="@+id/tv_qr_change"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_centerVertical="true"
+            <TextView
+                android:id="@+id/tv_address_change"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
                 android:layout_marginRight="9dp"
-                android:layout_toLeftOf="@+id/iv_qr_right"
-
-                android:background="@drawable/qr_code" />
+                android:layout_toLeftOf="@+id/iv_address_right"
+                android:gravity="center_vertical|right"
+                android:textColor="@color/grey" />
 
             <ImageView
-                android:id="@+id/iv_qr_right"
+                android:id="@+id/iv_address_right"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_alignParentRight="true"
@@ -401,18 +269,19 @@
             android:layout_height="1dp"
             android:background="@color/grey" />
 
-        <Button
-            android:id="@+id/bt_logout"
+        <TextView
+            android:id="@+id/tv_save"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@color/red"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/bg_save"
             android:gravity="center"
-            android:text="退出登录" />
+            android:text="保存"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
 
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/grey" />
     </LinearLayout>
 </ScrollView>

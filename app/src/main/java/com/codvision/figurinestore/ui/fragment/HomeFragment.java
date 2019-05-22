@@ -16,13 +16,17 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.codvision.figurinestore.R;
-import com.codvision.figurinestore.ui.adapter.ViewPagerAdapter;
-import com.codvision.figurinestore.sqlite.DBServer;
-import com.codvision.figurinestore.sqlite.bean.Good;
+import com.codvision.figurinestore.module.bean.Commodity;
+import com.codvision.figurinestore.module.bean.CommodityGet;
+import com.codvision.figurinestore.presenter.CommodityGetPresenter;
+import com.codvision.figurinestore.presenter.contract.CommodityGetContract;
 import com.codvision.figurinestore.ui.activity.BuyDetailActivity;
 import com.codvision.figurinestore.ui.activity.GoodsTypeActivity;
 import com.codvision.figurinestore.ui.activity.SearchActivity;
+import com.codvision.figurinestore.ui.adapter.CommodityAdapter;
 import com.codvision.figurinestore.utils.GlideImageLoader;
 import com.codvision.figurinestore.utils.NoScrollGridView;
 import com.youth.banner.Banner;
@@ -34,10 +38,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
-
-public class HomeFragment extends Fragment implements View.OnClickListener {
+public class HomeFragment extends Fragment implements View.OnClickListener, CommodityGetContract.View {
     /**
      * TAG
      */
@@ -58,24 +60,20 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private ImageView ivHomeAll;
 
     private NoScrollGridView gridView;
-    private List<Map<String, Object>> dataList;
-    private SimpleAdapter adapter;
-    private DBServer db;
-    private List<Good> goodList;
+    private List<Commodity> commodityList = new ArrayList<>();
+    private CommodityAdapter commodityAdapter;
 
-    private String[] from = {"img", "text", "price", "click"};
-    private int[] to = {R.id.img, R.id.text, R.id.price, R.id.click};
     private List<Integer> images = new ArrayList<>();
     private List<String> titles = new ArrayList<>();
 
     private Banner bannerHome;
+    private CommodityGetPresenter commodityGetPresenter;
 
     @Nullable
     @Override
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fagment_home, container, false);
-        initGridViewData();
         initView();
         initBannner();
         initEvent();
@@ -83,6 +81,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initBannner() {
+        images.clear();
+        titles.clear();
         images.add(R.drawable.bannner1);
         images.add(R.drawable.bannner2);
         images.add(R.drawable.bannner3);
@@ -122,9 +122,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         ivHomeAll = view.findViewById(R.id.iv_home_all);
         gridView = view.findViewById(R.id.gridview);
         bannerHome = view.findViewById(R.id.banner_home);
-        adapter = new SimpleAdapter(getActivity(), dataList, R.layout.gridview_item, from, to);
-        gridView.setAdapter(adapter);
-
+        commodityAdapter = new CommodityAdapter(getActivity(), commodityList);
+        gridView.setAdapter(commodityAdapter);
+        commodityGetPresenter = new CommodityGetPresenter(this, getActivity());
+        commodityGetPresenter.getCommodity(new CommodityGet("id"));
         changeHeadPic(R.drawable.head1, ivHomeFigurine);
         changeHeadPic(R.drawable.head2, ivHomeModel);
         changeHeadPic(R.drawable.head3, ivHomePeriphery);
@@ -148,26 +149,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent();
-                intent.putExtra("goodId", goodList.get(position).getGoodId());//设置参数,""
+                intent.putExtra("goodId", commodityList.get(position).getId()+"");//设置参数,""
                 intent.setClass(getActivity(), BuyDetailActivity.class);//从哪里跳到哪里
                 getActivity().startActivity(intent);
             }
         });
-    }
-
-    public void initGridViewData() {
-        db = new DBServer(getActivity());
-        goodList = db.findAllGoods();
-        Log.i(TAG, "initGridViewData: " + goodList.size());
-        dataList = new ArrayList<Map<String, Object>>();
-        for (int i = 0; i < goodList.size(); i++) {
-            Map<String, Object> map = new HashMap<String, Object>();
-            map.put("img", getResources().getIdentifier(goodList.get(i).getGoodPic1(), "drawable", getActivity().getPackageName()));
-            map.put("text", goodList.get(i).getGoodName());
-            map.put("price", goodList.get(i).getGoodPrice());
-            map.put("click", goodList.get(i).getGoodChoice());
-            dataList.add(map);
-        }
     }
 
 
@@ -189,15 +175,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.tv_home_banner1:
                 setClick(tvHomeBanner1);
+                commodityGetPresenter.getCommodity(new CommodityGet("id"));
                 break;
             case R.id.tv_home_banner2:
                 setClick(tvHomeBanner2);
+                commodityGetPresenter.getCommodity(new CommodityGet("choice"));
                 break;
             case R.id.tv_home_banner3:
                 setClick(tvHomeBanner3);
+                commodityGetPresenter.getCommodity(new CommodityGet("price"));
                 break;
             case R.id.tv_home_banner4:
                 setClick(tvHomeBanner4);
+                commodityGetPresenter.getCommodity(new CommodityGet("time"));
                 break;
             case R.id.iv_home_figurine:
                 intent_type = new Intent();
@@ -229,7 +219,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private void changeHeadPic(Object src, ImageView imageView) {
         //设置圆形图像
         Glide.with(getActivity()).load(src)
-                .bitmapTransform(new CropCircleTransformation(getActivity()))
+                .apply(RequestOptions.bitmapTransform(new CircleCrop()))
                 .into(imageView);
+    }
+
+    @Override
+    public void getCommoditySuccess(List<Commodity> commodityList) {
+        this.commodityList.clear();
+        for (int i = 0; i < commodityList.size(); i++) {
+            this.commodityList.add(commodityList.get(i));
+        }
+        commodityAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void getCommodityFail(String code, String message) {
+
     }
 }

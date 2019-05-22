@@ -7,8 +7,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.codvision.figurinestore.R;
-import com.codvision.figurinestore.sqlite.DBServer;
-import com.codvision.figurinestore.sqlite.bean.Good;
+import com.codvision.figurinestore.module.bean.Commodity;
+import com.codvision.figurinestore.module.bean.CommodityGetById;
+import com.codvision.figurinestore.presenter.CommodityGetByIdPresenter;
+import com.codvision.figurinestore.presenter.contract.CommodityGetByIdContract;
 import com.codvision.figurinestore.utils.GlideImageLoader;
 import com.codvision.figurinestore.utils.NormalToolbar;
 import com.youth.banner.Banner;
@@ -19,20 +21,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class BuyDetailActivity extends AppCompatActivity {
+public class BuyDetailActivity extends AppCompatActivity implements CommodityGetByIdContract.View {
     /**
      * TAG
      */
     public static final String TAG = "BuyDetailActivity";
     private NormalToolbar toolbar;
-
-    private Good good;
-    private DBServer db;
     private Banner banner;
     private TextView tvGoodName;
     private TextView tvGoodPrice;
     private TextView tvGoodTime;
     private TextView tvGoodSign;
+    private CommodityGetByIdPresenter commodityGetByIdPresenter;
     private List<Integer> images = new ArrayList<>();
 
     @Override
@@ -40,10 +40,7 @@ public class BuyDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buy_detail);
         initView();
-        initBanner();
         initEvent();
-
-
     }
 
     private void initView() {
@@ -53,23 +50,17 @@ public class BuyDetailActivity extends AppCompatActivity {
         tvGoodPrice = findViewById(R.id.tv_good_price);
         tvGoodTime = findViewById(R.id.tv_good_time);
         tvGoodSign = findViewById(R.id.tv_good_sign);
-
-        db = new DBServer(this);
+        commodityGetByIdPresenter = new CommodityGetByIdPresenter(this, this);
         Intent intent = getIntent();
         String NewsID = intent.getStringExtra("goodId");
-        good = db.getGoodForId(NewsID);
+        commodityGetByIdPresenter.getCommodity(new CommodityGetById(Integer.parseInt(NewsID)));
         toolbar.setTitle("购买页面");
-        tvGoodName.setText(good.getGoodName());
-        tvGoodPrice.setText(good.getGoodPrice());
-        tvGoodTime.setText(good.getGoodTime());
-        tvGoodSign.setText(good.getGoodSign());
-
     }
 
-    private void initBanner() {
-        images.add(getResources().getIdentifier(good.getGoodPic1(), "drawable", getPackageName()));
-        images.add(getResources().getIdentifier(good.getGoodPic2(), "drawable", getPackageName()));
-        images.add(getResources().getIdentifier(good.getGoodPic3(), "drawable", getPackageName()));
+    private void initBanner(Commodity commodity) {
+        images.add(getResources().getIdentifier(commodity.getPic1(), "drawable", getPackageName()));
+        images.add(getResources().getIdentifier(commodity.getPic2(), "drawable", getPackageName()));
+        images.add(getResources().getIdentifier(commodity.getPic3(), "drawable", getPackageName()));
         //设置图片加载器
         banner.setImageLoader(new GlideImageLoader());
         //设置图片集合
@@ -93,5 +84,19 @@ public class BuyDetailActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    public void getCommoditySuccess(Commodity commodity) {
+        initBanner(commodity);
+        tvGoodName.setText(commodity.getName());
+        tvGoodPrice.setText(commodity.getPrice() + "");
+        tvGoodTime.setText(commodity.getTime() + "");
+        tvGoodSign.setText(commodity.getSign());
+    }
+
+    @Override
+    public void getCommodityFail(String code, String message) {
+
     }
 }

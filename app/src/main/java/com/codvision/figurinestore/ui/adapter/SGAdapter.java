@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codvision.figurinestore.R;
-import com.codvision.figurinestore.bean.SanGuoBean;
+import com.codvision.figurinestore.module.bean.SanGuoBean;
 import java.util.List;
 
 /**

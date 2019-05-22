@@ -1,0 +1,24 @@
+<resources>
+
+    <dimen name="datescroller_bg_padding">5dp</dimen>
+    <dimen name="datescroller_bg_margin">10dp</dimen>
+    <dimen name="datescroller_txt_size">14sp</dimen>
+
+    <dimen name="margin_small">10dp</dimen>
+    <dimen name="margin_normal">20dp</dimen>
+    <dimen name="margin_big">30dp</dimen>
+    <dimen name="margin_huge">40dp</dimen>
+
+    <dimen name="text_size_small">10sp</dimen>
+    <dimen name="text_size_normal">15sp</dimen>
+    <dimen name="text_size_big">20sp</dimen>
+    <dimen name="text_size_huge">40sp</dimen>
+
+    <dimen name="picker_view_height">160dp</dimen>
+    <dimen name="date_unit_text_size">18sp</dimen>
+    <!--头像大小-->
+    <dimen name="size_head">50dp</dimen>
+    <dimen name="size_set">20dp</dimen>
+    <dimen name="text_size_name">18sp</dimen>
+    <dimen name="text_size_sign">13sp</dimen>
+</resources>

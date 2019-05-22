@@ -1,4 +1,4 @@
-package com.codvision.figurinestore.bean;
+package com.codvision.figurinestore.module.bean;
 
 public class SanGuoBean {
     /**

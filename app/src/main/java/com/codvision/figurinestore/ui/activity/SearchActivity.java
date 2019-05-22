@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.codvision.figurinestore.R;
 import com.codvision.figurinestore.ui.adapter.SGAdapter;
-import com.codvision.figurinestore.bean.SanGuoBean;
+import com.codvision.figurinestore.module.bean.SanGuoBean;
 import com.codvision.figurinestore.utils.CommolySearchView;
 import com.codvision.figurinestore.utils.JsonParser;
 import com.iflytek.cloud.ErrorCode;

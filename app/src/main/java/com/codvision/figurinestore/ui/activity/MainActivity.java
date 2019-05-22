@@ -2,9 +2,14 @@ package com.codvision.figurinestore.ui.activity;
 
 
 import android.app.FragmentManager;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +17,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.codvision.figurinestore.R;
+import com.codvision.figurinestore.heartbeat.HeartBeatService;
+import com.codvision.figurinestore.heartbeat.IMessageCallback;
 import com.codvision.figurinestore.ui.fragment.HomeFragment;
 import com.codvision.figurinestore.ui.fragment.MessageFragment;
 import com.codvision.figurinestore.ui.fragment.OrderFragment;
@@ -34,11 +41,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private NormalToolbar toolbar;
     private SharedPreferences sp;
+    private Handler handler;
+    private HeartBeatService heartBeatService;
+    private boolean mIsBound = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        doBindService();
         initWidget();
         intiEvent();
     }
@@ -54,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         userFragment = new UserFragment();
         fragmentManager = getFragmentManager();
         toolbar = findViewById(R.id.toolbar);
+        handler = new Handler(messageFragment);
     }
 
     private void intiEvent() {
@@ -74,13 +86,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         toolbar.setTitle("首页");
         toolbar.hideLeftButton();
-        sp = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putString("state", "true");
-        editor.commit();
-        Log.i(TAG, "uname: " + sp.getString("uname", null));
-        Log.i(TAG, "upswd: " + sp.getString("upswd", null));
-        Log.i(TAG, "state: " + sp.getString("state", null));
     }
 
     private void setClick(TextView textView) {
@@ -156,4 +161,48 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
+
+    /**
+     * 长链接回调
+     */
+    private ServiceConnection mConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            ;
+            heartBeatService = ((HeartBeatService.SocketBinder) service).getService();
+
+            //回调监听
+            heartBeatService.setMessageCallback(new IMessageCallback() {
+                @Override
+                public void onReceived(String s) {
+                    Log.i(TAG, "onReceived: 开始回调");
+                    handler.obtainMessage(1, s).sendToTarget();
+                }
+            });
+        }
+
+        public void onServiceDisconnected(ComponentName className) {
+            heartBeatService = null;
+        }
+    };
+
+    /*
+     * 绑定服务
+     */
+    void doBindService() {
+        bindService(new Intent(MainActivity.this, HeartBeatService.class), mConnection, Context.BIND_AUTO_CREATE);
+        mIsBound = true;
+    }
+
+    /**
+     * 解除绑定
+     */
+    void doUnbindService() {
+        if (mIsBound) {
+            unbindService(mConnection);
+            mIsBound = false;
+        }
+    }
+
+
+
 }

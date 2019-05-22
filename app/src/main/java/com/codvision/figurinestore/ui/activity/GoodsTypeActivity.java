@@ -10,8 +10,12 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.codvision.figurinestore.R;
-import com.codvision.figurinestore.sqlite.DBServer;
-import com.codvision.figurinestore.sqlite.bean.Good;
+import com.codvision.figurinestore.module.bean.Commodity;
+import com.codvision.figurinestore.module.bean.CommodityGet;
+import com.codvision.figurinestore.module.bean.OrderTableRecieve;
+import com.codvision.figurinestore.presenter.CommodityGetPresenter;
+import com.codvision.figurinestore.presenter.contract.CommodityGetContract;
+import com.codvision.figurinestore.ui.adapter.CommodityAdapter;
 import com.codvision.figurinestore.utils.NoScrollGridView;
 import com.codvision.figurinestore.utils.NormalToolbar;
 
@@ -20,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GoodsTypeActivity extends AppCompatActivity implements View.OnClickListener {
+public class GoodsTypeActivity extends AppCompatActivity implements View.OnClickListener, CommodityGetContract.View {
     /**
      * TAG
      */
@@ -30,13 +34,12 @@ public class GoodsTypeActivity extends AppCompatActivity implements View.OnClick
     private TextView tvTypeChoice;
     private NormalToolbar toolbar;
     private NoScrollGridView gridView;
-    private List<Map<String, Object>> dataList;
-    private List<Good> goodList;
-    private DBServer db;
-    private String[] from = {"img", "text", "price", "click"};
-    private int[] to = {R.id.img, R.id.text, R.id.price, R.id.click};
-    private SimpleAdapter adapter;
+    private List<Commodity> commodityList = new ArrayList<>();
+    private CommodityAdapter commodityAdapter;
+
+
     private String goodType;
+    private CommodityGetPresenter commodityGetPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +51,9 @@ public class GoodsTypeActivity extends AppCompatActivity implements View.OnClick
     }
 
     public void initGridViewData() {
-        db = new DBServer(this);
         Intent intent = getIntent();
         goodType = intent.getStringExtra("goodType");
-        getGoods(1);
+
     }
 
     private void initView() {
@@ -59,74 +61,40 @@ public class GoodsTypeActivity extends AppCompatActivity implements View.OnClick
         tvTypePrice = findViewById(R.id.tv_type_price);
         tvTypeChoice = findViewById(R.id.tv_type_choice);
         toolbar = findViewById(R.id.toolbar);
-
+        gridView = findViewById(R.id.gridview);
+        commodityAdapter = new CommodityAdapter(this, commodityList);
+        gridView.setAdapter(commodityAdapter);
+        commodityGetPresenter = new CommodityGetPresenter(this, this);
+        commodityGetPresenter.getCommodity(new CommodityGet("id"));
     }
 
     private void initEvent() {
         tvTypeDefault.setOnClickListener(this);
         tvTypePrice.setOnClickListener(this);
         tvTypeChoice.setOnClickListener(this);
+
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent();
-                intent.putExtra("goodId", goodList.get(position).getGoodId());//设置参数,""
+                intent.putExtra("goodId", commodityList.get(position).getId()+"");//设置参数,""
                 intent.setClass(GoodsTypeActivity.this, BuyDetailActivity.class);//从哪里跳到哪里
-                GoodsTypeActivity.this.startActivity(intent);
+                startActivity(intent);
             }
         });
+
         toolbar.mLeftButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+
         //初始化
         setClick(tvTypeDefault);
         toolbar.setTitle(goodType);
     }
 
-    private void getGoods(int sort) {
-        switch (sort) {
-            case 1:
-                if (goodType.equals("全部")) {
-                    goodList = db.findAllGoods();
-                } else {
-                    goodList = db.getGoodForType(goodType);
-                }
-                break;
-            case 2:
-                if (goodType.equals("全部")) {
-                    goodList = db.findAllGoodsByPrice();
-                } else {
-                    goodList = db.getGoodForTypeByPrice(goodType);
-                }
-                break;
-            case 3:
-                if (goodType.equals("全部")) {
-                    goodList = db.findAllGoodsByChoice();
-                } else {
-                    goodList = db.getGoodForTypeByChoice(goodType);
-                }
-
-                break;
-            default:
-                break;
-        }
-        Log.i(TAG, "initGridViewData: " + goodList.size());
-        dataList = new ArrayList<Map<String, Object>>();
-        for (int i = 0; i < goodList.size(); i++) {
-            Map<String, Object> map = new HashMap<String, Object>();
-            map.put("img", getResources().getIdentifier(goodList.get(i).getGoodPic1(), "drawable", getPackageName()));
-            map.put("text", goodList.get(i).getGoodName());
-            map.put("price", goodList.get(i).getGoodPrice());
-            map.put("click", goodList.get(i).getGoodChoice());
-            dataList.add(map);
-        }
-        gridView = findViewById(R.id.gridview);
-        adapter = new SimpleAdapter(this, dataList, R.layout.gridview_item, from, to);
-        gridView.setAdapter(adapter);
-    }
 
     private void setClick(TextView textView) {
         tvTypeDefault.setSelected(false);
@@ -140,18 +108,37 @@ public class GoodsTypeActivity extends AppCompatActivity implements View.OnClick
         switch (v.getId()) {
             case R.id.tv_type_default:
                 setClick(tvTypeDefault);
-                getGoods(1);
+                commodityGetPresenter.getCommodity(new CommodityGet("id"));
                 break;
             case R.id.tv_type_price:
                 setClick(tvTypePrice);
-                getGoods(2);
+                commodityGetPresenter.getCommodity(new CommodityGet("price"));
                 break;
             case R.id.tv_type_choice:
+                commodityGetPresenter.getCommodity(new CommodityGet("choice"));
                 setClick(tvTypeChoice);
-                getGoods(3);
                 break;
             default:
                 break;
         }
+    }
+
+    @Override
+    public void getCommoditySuccess(List<Commodity> commodityList) {
+        this.commodityList.clear();
+        for (int i = 0; i < commodityList.size(); i++) {
+            if (commodityList.get(i).getType().equals(goodType)||goodType.equals("全部")) {
+                this.commodityList.add(commodityList.get(i));
+            }
+
+        }
+        commodityAdapter.notifyDataSetChanged();
+
+    }
+
+
+    @Override
+    public void getCommodityFail(String code, String message) {
+
     }
 }
