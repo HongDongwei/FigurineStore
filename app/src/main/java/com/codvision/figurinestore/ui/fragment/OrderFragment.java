@@ -53,6 +53,13 @@ public class OrderFragment extends Fragment implements OrderTableSelectContract.
         return view;
     }
 
+    @Override
+    public void onResume() {
+        orderTableSelectPresenter.orderSelect(new OrderTableSelect(SharedPreferenceUtils.getUserId(getActivity())));
+        setClick(1, tvOn);
+        super.onResume();
+    }
+
     private void initView() {
         lvOrder = view.findViewById(R.id.lv_order);
         tvOn = view.findViewById(R.id.tv_order_state_on);
@@ -87,6 +94,7 @@ public class OrderFragment extends Fragment implements OrderTableSelectContract.
                                                    Intent intent = new Intent(getActivity(), OrderActivity.class);
                                                    intent.putExtra("goodId", orderTableRecieveList.get(position).getId());
                                                    Constant.orderNum = orderTableRecieveList.get(position).getAmount();
+                                                   Constant.orderid = orderTableRecieveList.get(position).getOrderid();
                                                    startActivity(intent);
                                                }
                                            }

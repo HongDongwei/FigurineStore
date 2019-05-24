@@ -18,7 +18,9 @@ import com.bumptech.glide.request.RequestOptions;
 import com.codvision.figurinestore.App;
 import com.codvision.figurinestore.R;
 import com.codvision.figurinestore.module.bean.Msg;
+import com.codvision.figurinestore.utils.CircleTransform;
 import com.codvision.figurinestore.utils.SharedPreferenceUtils;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -64,7 +66,7 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
             viewholder.leftlayout.setVisibility(View.VISIBLE);
             viewholder.ivLeft.setVisibility(View.VISIBLE);
             viewholder.ivRight.setVisibility(View.GONE);
-            changeHeadPic(R.drawable.head1, viewholder.ivLeft);
+            Picasso.with(context).load(R.drawable.head2).error(R.drawable.head2).transform(new CircleTransform()).into( viewholder.ivLeft);
             viewholder.rightlayout.setVisibility(View.GONE);
             viewholder.leftmsg.setText(msg.getContent());
         } else if (msg.getType() == Msg.TYPE_SENT) {
@@ -72,7 +74,7 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
             viewholder.rightlayout.setVisibility(View.VISIBLE);
             viewholder.ivLeft.setVisibility(View.GONE);
             viewholder.ivRight.setVisibility(View.VISIBLE);
-            changeHeadPic(Uri.parse(SharedPreferenceUtils.getImage(context)), viewholder.ivRight);
+            Picasso.with(context).load(R.drawable.head1).error(R.drawable.head1).transform(new CircleTransform()).into( viewholder.ivRight);
             viewholder.rightmsg.setText(msg.getContent());
         }
     }

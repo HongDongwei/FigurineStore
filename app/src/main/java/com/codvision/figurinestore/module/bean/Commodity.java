@@ -26,7 +26,7 @@ public class Commodity implements Serializable {
     private String type;
 
     private String day;
-    private String time;
+    private int time;
 
 
     public int getId() {
@@ -109,11 +109,11 @@ public class Commodity implements Serializable {
         this.day = day;
     }
 
-    public String getTime() {
+    public int getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(int time) {
         this.time = time;
     }
 }

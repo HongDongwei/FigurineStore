@@ -1,17 +1,17 @@
 package com.codvision.figurinestore.module.bean;
 
 public class OrderTableDelete {
-    private int orderid;
-
-    public OrderTableDelete(int orderid) {
-        this.orderid = orderid;
+    public OrderTableDelete(int id) {
+        this.id = id;
     }
 
-    public int getOrderid() {
-        return orderid;
+    private int id;
+
+    public int getId() {
+        return id;
     }
 
-    public void setOrderid(int orderid) {
-        this.orderid = orderid;
+    public void setId(int id) {
+        this.id = id;
     }
 }

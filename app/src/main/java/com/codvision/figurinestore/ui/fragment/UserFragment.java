@@ -7,9 +7,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AlertDialog;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -26,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.codvision.figurinestore.R;
@@ -36,13 +40,17 @@ import com.codvision.figurinestore.presenter.UserLoginPresenter;
 import com.codvision.figurinestore.presenter.UserSubmitPresenter;
 import com.codvision.figurinestore.presenter.contract.UserLoginContract;
 import com.codvision.figurinestore.presenter.contract.UserSubmitContract;
+import com.codvision.figurinestore.ui.activity.LoginActivity;
 import com.codvision.figurinestore.utils.AreaPickerView;
+import com.codvision.figurinestore.utils.CircleTransform;
 import com.codvision.figurinestore.utils.DateTimeDialogOnlyYMD;
 import com.codvision.figurinestore.utils.SharedPreferenceUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
@@ -63,6 +71,7 @@ public class UserFragment extends Fragment implements View.OnClickListener, User
     private TextView tvMoneyChange;
     private TextView tvAddressChange;
     private TextView tvTelChange;
+    private TextView tv_logout;
     private TextView tvSave;
     private User user;
     private String[] sexArry = new String[]{"保密", "女", "男"};// 性别选择
@@ -102,14 +111,15 @@ public class UserFragment extends Fragment implements View.OnClickListener, User
         tvMoneyChange = view.findViewById(R.id.tv_money_change);
         tvTelChange = view.findViewById(R.id.tv_tel_change);
         tvAddressChange = view.findViewById(R.id.tv_address_change);
+        tv_logout = view.findViewById(R.id.tv_logout);
         tvSave = view.findViewById(R.id.tv_save);
         userLoginPresenter = new UserLoginPresenter(this, getActivity());
         userSubmitPresenter = new UserSubmitPresenter(this, getActivity());
-
+        userLoginPresenter.login(SharedPreferenceUtils.getUserName(getActivity()), SharedPreferenceUtils.getPwd(getActivity()));
     }
 
     private void initDate() {
-        userLoginPresenter.login(SharedPreferenceUtils.getUserName(getActivity()), SharedPreferenceUtils.getPwd(getActivity()));
+
     }
 
 
@@ -120,15 +130,9 @@ public class UserFragment extends Fragment implements View.OnClickListener, User
         tvTelChange.setOnClickListener(this);
         tvSave.setOnClickListener(this);
         tvAddressChange.setOnClickListener(this);
+        tv_logout.setOnClickListener(this);
     }
 
-
-    private void changeHeadPic(Object src) {
-        //设置圆形图像
-        Glide.with(getActivity()).load(src)
-                .apply(RequestOptions.bitmapTransform(new CircleCrop()))
-                .into(ivHeadChoice);
-    }
 
     private void onCreateDialog(String title, final TextView textView) {
         // 使用LayoutInflater来加载dialog_setname.xml布局
@@ -207,6 +211,12 @@ public class UserFragment extends Fragment implements View.OnClickListener, User
                 areaPickerView.setSelect(i);
                 areaPickerView.show();
                 break;
+            case R.id.tv_logout:
+                SharedPreferenceUtils.clearLoginInfo(getActivity());
+                Intent intent1 = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent1);
+                getActivity().finish();
+                break;
             default:
                 break;
         }
@@ -217,14 +227,35 @@ public class UserFragment extends Fragment implements View.OnClickListener, User
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if (data != null) {
-                uri = String.valueOf(data.getData());
+//                uri = data.getData().toString();
+                uri = getRealPathFromUri_Api11To18(getActivity(), data.getData());
                 user.setImage(uri);
-                changeHeadPic(data.getData());
+                Picasso.with(getActivity()).load(new File(uri)).transform(new CircleTransform()).error(R.drawable.head1).into(ivHeadChoice);
+                // changeHeadPic(uri);
+                //changeHeadPic(data.getData());
                 imageBack = true;
             }
-            //     ivHeadChoice.setImageURI(data.getData());
-
         }
+    }
+
+    /**
+     * //适配api11-api18,根据uri获取图片的绝对路径。
+     * 针对图片URI格式为Uri:: content://media/external/images/media/1028
+     */
+    private static String getRealPathFromUri_Api11To18(Context context, Uri uri) {
+        String filePath = null;
+        String[] projection = {MediaStore.Images.Media.DATA};
+
+        CursorLoader loader = new CursorLoader(context, uri, projection, null,
+                null, null);
+        Cursor cursor = loader.loadInBackground();
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+            filePath = cursor.getString(cursor.getColumnIndex(projection[0]));
+            cursor.close();
+        }
+        return filePath;
     }
 
     private void initCity() {
@@ -272,13 +303,7 @@ public class UserFragment extends Fragment implements View.OnClickListener, User
         tvMoneyChange.setText(user.getBalance() + "");
         tvTelChange.setText(user.getPhone());
         tvAddressChange.setText(user.getAddress());
-        if (!imageBack) {
-            if (!TextUtils.isEmpty(user.getImage())) {
-                changeHeadPic(Uri.parse(user.getImage()));
-            } else {
-                changeHeadPic(R.drawable.head1);
-            }
-        }
+        Picasso.with(getActivity()).load(new File(user.getImage())).transform(new CircleTransform()).error(R.drawable.head1).into(ivHeadChoice);
         imageBack = false;
     }
 

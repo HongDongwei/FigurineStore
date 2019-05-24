@@ -76,6 +76,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Comm
         return view;
     }
 
+    @Override
+    public void onResume() {
+        commodityGetPresenter.getCommodity(new CommodityGet("id"));
+        setClick(tvHomeBanner1);
+        super.onResume();
+    }
+
     private void initView() {
         llHomeSearch = view.findViewById(R.id.ll_home_search);
         tvHomeBanner1 = view.findViewById(R.id.tv_home_banner1);
@@ -91,12 +98,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Comm
         commodityAdapter = new CommodityAdapter(getActivity(), commodityList);
         gridView.setAdapter(commodityAdapter);
         commodityGetPresenter = new CommodityGetPresenter(this, getActivity());
-        commodityGetPresenter.getCommodity(new CommodityGet("id"));
+
         changeHeadPic(R.drawable.head1, ivHomeFigurine);
         changeHeadPic(R.drawable.head2, ivHomeModel);
         changeHeadPic(R.drawable.head3, ivHomePeriphery);
         changeHeadPic(R.drawable.head4, ivHomeAll);
-        setClick(tvHomeBanner1);
+
     }
 
     private void initBannner() {
@@ -130,7 +137,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Comm
     }
 
 
-
     private void initEvent() {
         llHomeSearch.setOnClickListener(this);
         tvHomeBanner1.setOnClickListener(this);
@@ -147,7 +153,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Comm
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent();
-                intent.putExtra("goodId", commodityList.get(position).getId()+"");//设置参数,""
+                intent.putExtra("goodId", commodityList.get(position).getId() + "");//设置参数,""
                 intent.setClass(getActivity(), BuyDetailActivity.class);//从哪里跳到哪里
                 getActivity().startActivity(intent);
             }
@@ -225,7 +231,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Comm
     public void getCommoditySuccess(List<Commodity> commodityList) {
         this.commodityList.clear();
         for (int i = 0; i < commodityList.size(); i++) {
-            this.commodityList.add(commodityList.get(i));
+            if (commodityList.get(i).getTime() > 0) {
+                this.commodityList.add(commodityList.get(i));
+            }
         }
         commodityAdapter.notifyDataSetChanged();
     }

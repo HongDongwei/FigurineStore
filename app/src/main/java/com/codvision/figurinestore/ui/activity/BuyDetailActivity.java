@@ -1,5 +1,6 @@
 package com.codvision.figurinestore.ui.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,8 +12,11 @@ import android.widget.TextView;
 import com.codvision.figurinestore.R;
 import com.codvision.figurinestore.module.bean.Commodity;
 import com.codvision.figurinestore.module.bean.CommodityGetById;
+import com.codvision.figurinestore.module.bean.CommoditySubmit;
 import com.codvision.figurinestore.presenter.CommodityGetByIdPresenter;
+import com.codvision.figurinestore.presenter.CommoditySubmitPresenter;
 import com.codvision.figurinestore.presenter.contract.CommodityGetByIdContract;
+import com.codvision.figurinestore.presenter.contract.CommoditySubmitContract;
 import com.codvision.figurinestore.utils.GlideImageLoader;
 import com.codvision.figurinestore.utils.NormalToolbar;
 import com.youth.banner.Banner;
@@ -23,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class BuyDetailActivity extends AppCompatActivity implements CommodityGetByIdContract.View {
+public class BuyDetailActivity extends Activity implements CommodityGetByIdContract.View, CommoditySubmitContract.View {
     /**
      * TAG
      */
@@ -38,6 +42,7 @@ public class BuyDetailActivity extends AppCompatActivity implements CommodityGet
     private ImageButton ibOrder;
     private Button btBuy;
     private CommodityGetByIdPresenter commodityGetByIdPresenter;
+    private CommoditySubmitPresenter commoditySubmitPresenter;
     private List<Integer> images = new ArrayList<>();
     private String NewsID;
 
@@ -60,11 +65,19 @@ public class BuyDetailActivity extends AppCompatActivity implements CommodityGet
         ibOrder = findViewById(R.id.ib_order);
         btBuy = findViewById(R.id.bt_buy);
         commodityGetByIdPresenter = new CommodityGetByIdPresenter(this, this);
+        commoditySubmitPresenter = new CommoditySubmitPresenter(this, this);
         Intent intent = getIntent();
         NewsID = intent.getStringExtra("goodId");
-        commodityGetByIdPresenter.getCommodity(new CommodityGetById(Integer.parseInt(NewsID)));
+
         toolbar.setTitle("购买页面");
         toolbar.hideRightButton();
+
+    }
+
+    @Override
+    protected void onResume() {
+        commodityGetByIdPresenter.getCommodity(new CommodityGetById(Integer.parseInt(NewsID)));
+        super.onResume();
     }
 
     private void initBanner(Commodity commodity) {
@@ -127,10 +140,21 @@ public class BuyDetailActivity extends AppCompatActivity implements CommodityGet
         tvGoodPrice.setText(commodity.getPrice() + "");
         tvGoodTime.setText(commodity.getTime() + "");
         tvGoodSign.setText(commodity.getSign());
+        commoditySubmitPresenter.submitCommodity(new CommoditySubmit(Integer.parseInt(NewsID), commodity.getChoice() + 1, commodity.getTime()));
     }
 
     @Override
     public void getCommodityFail(String code, String message) {
+
+    }
+
+    @Override
+    public void submitCommoditySuccess() {
+
+    }
+
+    @Override
+    public void submitCommodityFail(String code, String message) {
 
     }
 }

@@ -8,7 +8,7 @@ public class ApiAddress {
 
     //生成环境
 //    public final static String API = "http://192.168.2.102:8767/";
-    public final static String API = "http://192.168.1.105:8767/";
+    public final static String API = "http://192.168.43.162:8767/";
 
     /**************************************个人中心************************************************/
 
@@ -22,6 +22,8 @@ public class ApiAddress {
     public final static String COMMODITY_SELECT = "v1/vsm/commodity/select/all";
     //获取商品
     public final static String COMMODITY_SELECT_BY_ID = "v1/vsm/commodity/select";
+    //修改商品
+    public final static String COMMODITY_SUBMIT = "v1/vsm/commodity/sumbit";
     //插入订单
     public final static String ORDER_INSERT = "v1/vsm/order/table/insert";
     //获取订单

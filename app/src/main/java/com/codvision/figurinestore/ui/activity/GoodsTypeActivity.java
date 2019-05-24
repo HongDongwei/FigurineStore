@@ -77,7 +77,7 @@ public class GoodsTypeActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent();
-                intent.putExtra("goodId", commodityList.get(position).getId()+"");//设置参数,""
+                intent.putExtra("goodId", commodityList.get(position).getId() + "");//设置参数,""
                 intent.setClass(GoodsTypeActivity.this, BuyDetailActivity.class);//从哪里跳到哪里
                 startActivity(intent);
             }
@@ -93,6 +93,7 @@ public class GoodsTypeActivity extends AppCompatActivity implements View.OnClick
         //初始化
         setClick(tvTypeDefault);
         toolbar.setTitle(goodType);
+        toolbar.hideRightButton();
     }
 
 
@@ -127,8 +128,10 @@ public class GoodsTypeActivity extends AppCompatActivity implements View.OnClick
     public void getCommoditySuccess(List<Commodity> commodityList) {
         this.commodityList.clear();
         for (int i = 0; i < commodityList.size(); i++) {
-            if (commodityList.get(i).getType().equals(goodType)||goodType.equals("全部")) {
-                this.commodityList.add(commodityList.get(i));
+            if (commodityList.get(i).getType().equals(goodType) || goodType.equals("全部")) {
+                if (commodityList.get(i).getTime() > 0) {
+                    this.commodityList.add(commodityList.get(i));
+                }
             }
 
         }

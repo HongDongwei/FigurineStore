@@ -418,8 +418,10 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         this.commodities.clear();
         this.commodityList.clear();
         for (int i = 0; i < commodityList.size(); i++) {
-            this.commodities.add(commodityList.get(i));
-            this.commodityList.add(commodityList.get(i));
+            if (commodityList.get(i).getTime() > 0) {
+                this.commodities.add(commodityList.get(i));
+                this.commodityList.add(commodityList.get(i));
+            }
         }
         sgAdapter.notifyDataSetChanged();
     }

@@ -4,6 +4,7 @@ package com.codvision.figurinestore.module.api;
 import com.codvision.figurinestore.base.WrapperEntity;
 import com.codvision.figurinestore.module.bean.Commodity;
 import com.codvision.figurinestore.module.bean.CommodityGetById;
+import com.codvision.figurinestore.module.bean.CommoditySubmit;
 import com.codvision.figurinestore.module.bean.InsertId;
 import com.codvision.figurinestore.module.bean.CommodityGet;
 import com.codvision.figurinestore.module.bean.OrderTableDelete;
@@ -57,6 +58,12 @@ public interface AllApi {
      */
     @POST(ApiAddress.COMMODITY_SELECT_BY_ID)
     Observable<WrapperEntity<Commodity>> getCommodityById(@Body CommodityGetById commodityGetById);
+
+    /**
+     * 修改商品
+     */
+    @POST(ApiAddress.COMMODITY_SUBMIT)
+    Observable<WrapperEntity<InsertId>> getCommoditySubmit(@Body CommoditySubmit commoditySubmit);
 
     /**
      * 插入订单

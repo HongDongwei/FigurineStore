@@ -14,6 +14,7 @@ public class Constant {
     public static String logger = "logger";
 
     public static int orderNum = 0;
+    public static int orderid = 0;
     private static boolean isPrintLog = true; //是否打开日志打印
 
 

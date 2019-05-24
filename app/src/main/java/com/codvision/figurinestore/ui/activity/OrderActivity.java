@@ -12,8 +12,10 @@ import android.text.SpannedString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.AbsoluteSizeSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,19 +25,29 @@ import com.codvision.figurinestore.base.Constant;
 import com.codvision.figurinestore.module.bean.Commodity;
 import com.codvision.figurinestore.module.bean.CommodityGet;
 import com.codvision.figurinestore.module.bean.CommodityGetById;
+import com.codvision.figurinestore.module.bean.CommoditySubmit;
+import com.codvision.figurinestore.module.bean.OrderTableDelete;
 import com.codvision.figurinestore.module.bean.OrderTableInsert;
+import com.codvision.figurinestore.module.bean.OrderTableSubmit;
 import com.codvision.figurinestore.module.bean.User;
 import com.codvision.figurinestore.presenter.CommodityGetByIdPresenter;
+import com.codvision.figurinestore.presenter.CommoditySubmitPresenter;
+import com.codvision.figurinestore.presenter.OrderTableDeletePresenter;
 import com.codvision.figurinestore.presenter.OrderTableInsertPresenter;
+import com.codvision.figurinestore.presenter.OrderTableSelectPresenter;
+import com.codvision.figurinestore.presenter.OrderTableSubmitPresenter;
 import com.codvision.figurinestore.presenter.UserLoginPresenter;
 import com.codvision.figurinestore.presenter.UserSubmitPresenter;
 import com.codvision.figurinestore.presenter.contract.CommodityGetByIdContract;
+import com.codvision.figurinestore.presenter.contract.CommoditySubmitContract;
+import com.codvision.figurinestore.presenter.contract.OrderTableDeleteContract;
 import com.codvision.figurinestore.presenter.contract.OrderTableInsertContract;
+import com.codvision.figurinestore.presenter.contract.OrderTableSubmitContract;
 import com.codvision.figurinestore.presenter.contract.UserLoginContract;
 import com.codvision.figurinestore.presenter.contract.UserSubmitContract;
 import com.codvision.figurinestore.utils.SharedPreferenceUtils;
 
-public class OrderActivity extends AppCompatActivity implements CommodityGetByIdContract.View, OrderTableInsertContract.View, UserSubmitContract.View, UserLoginContract.View {
+public class OrderActivity extends AppCompatActivity implements CommoditySubmitContract.View, OrderTableSubmitContract.View, CommodityGetByIdContract.View, OrderTableDeleteContract.View, OrderTableInsertContract.View, UserSubmitContract.View, UserLoginContract.View {
 
     private String NewsID;
 
@@ -51,15 +63,21 @@ public class OrderActivity extends AppCompatActivity implements CommodityGetById
     private TextView tvNum;
     private TextView tvSubmit;
     private TextView tvBack;
+    private ImageButton ibDelete;
 
     private OrderTableInsertPresenter orderTableInsertPresenter;
     private CommodityGetByIdPresenter commodityGetByIdPresenter;
+    private OrderTableDeletePresenter orderTableDeletePresenter;
+    private OrderTableSubmitPresenter orderTableSubmitPresenter;
+    private CommoditySubmitPresenter commoditySubmitPresenter;
     private UserLoginPresenter userLoginPresenter;
     private UserSubmitPresenter userSubmitPresenter;
     private int comid;
     int type = 0;
     private int comNum;
     private boolean orderType;
+    private Commodity commodity;
+    private String TAG = "OrderActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,13 +101,21 @@ public class OrderActivity extends AppCompatActivity implements CommodityGetById
         tvNum = findViewById(R.id.tv_order_num);
         tvSubmit = findViewById(R.id.tv_order_submit);
         tvBack = findViewById(R.id.tv_order_back);
+        ibDelete = findViewById(R.id.ib_order_delete);
         commodityGetByIdPresenter = new CommodityGetByIdPresenter(this, this);
         orderTableInsertPresenter = new OrderTableInsertPresenter(this, this);
+        orderTableDeletePresenter = new OrderTableDeletePresenter(this, this);
+        orderTableSubmitPresenter = new OrderTableSubmitPresenter(this, this);
+        commoditySubmitPresenter = new CommoditySubmitPresenter(this, this);
         userSubmitPresenter = new UserSubmitPresenter(this, this);
         userLoginPresenter = new UserLoginPresenter(this, this);
+
+
         comid = getIntent().getIntExtra("goodId", 0);
+        ibDelete.setVisibility(View.INVISIBLE);
         if (Constant.orderNum != 0) {
             orderType = true;
+            ibDelete.setVisibility(View.VISIBLE);
         }
         commodityGetByIdPresenter.getCommodity(new CommodityGetById(comid));
 
@@ -112,6 +138,12 @@ public class OrderActivity extends AppCompatActivity implements CommodityGetById
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+        ibDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                orderTableDeletePresenter.orderDelete(new OrderTableDelete(Constant.orderid));
             }
         });
     }
@@ -149,6 +181,7 @@ public class OrderActivity extends AppCompatActivity implements CommodityGetById
         }
     };
 
+
     /* @setNeutralButton 设置中间的按钮
      * 若只需一个按钮，仅设置 setPositiveButton 即可
      */
@@ -167,7 +200,7 @@ public class OrderActivity extends AppCompatActivity implements CommodityGetById
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (SharedPreferenceUtils.getBalance(OrderActivity.this) >= Float.valueOf(tvPrice.getText().toString())) {
-                    orderTableInsertPresenter.orderInsert(new OrderTableInsert(SharedPreferenceUtils.getUserId(OrderActivity.this), comid, "2019-5-25", "已完成", Integer.parseInt(etNum.getText().toString())));
+                    orderTableSubmitPresenter.orderSubmit(new OrderTableSubmit(Constant.orderid, "已完成", Integer.parseInt(etNum.getText().toString())));
                     type = 2;
                     User user = SharedPreferenceUtils.getUser(OrderActivity.this);
                     user.setBalance(SharedPreferenceUtils.getBalance(OrderActivity.this) - Float.valueOf(tvPrice.getText().toString()));
@@ -225,6 +258,7 @@ public class OrderActivity extends AppCompatActivity implements CommodityGetById
 
     @Override
     public void getCommoditySuccess(Commodity commodity) {
+        this.commodity = commodity;
         tvUserName.setText(SharedPreferenceUtils.getUserName(this));
         tvUserPhone.setText(SharedPreferenceUtils.getPhone(this));
         tvUserAddress.setText(SharedPreferenceUtils.getAddress(this));
@@ -254,6 +288,7 @@ public class OrderActivity extends AppCompatActivity implements CommodityGetById
             Toast.makeText(OrderActivity.this, "订单已经添加到购物车，请移步去订单页查看！", Toast.LENGTH_SHORT).show();
         } else if (type == 2) {
             Toast.makeText(OrderActivity.this, "订单已经完成，请移步去订单页查看！", Toast.LENGTH_SHORT).show();
+            commoditySubmitPresenter.submitCommodity(new CommoditySubmit(comid, commodity.getChoice(), commodity.getTime() - Integer.parseInt(tvNum.getText().toString().trim())));
         }
     }
 
@@ -264,6 +299,7 @@ public class OrderActivity extends AppCompatActivity implements CommodityGetById
 
     @Override
     public void submitSuccess() {
+        commoditySubmitPresenter.submitCommodity(new CommoditySubmit(comid, commodity.getChoice(), commodity.getTime() - Integer.parseInt(tvNum.getText().toString().trim())));
         userLoginPresenter.login(SharedPreferenceUtils.getUserName(OrderActivity.this), SharedPreferenceUtils.getPwd(OrderActivity.this));
     }
 
@@ -280,5 +316,36 @@ public class OrderActivity extends AppCompatActivity implements CommodityGetById
     @Override
     public void loginFail(String code, String message) {
 
+    }
+
+    @Override
+    public void orderDeleteSuccess() {
+        finish();
+    }
+
+    @Override
+    public void orderDeleteFail(String code, String message) {
+
+    }
+
+    @Override
+    public void orderSubmitSuccess() {
+        finish();
+    }
+
+    @Override
+    public void orderSubmitFail(String code, String message) {
+
+    }
+
+    @Override
+    public void submitCommoditySuccess() {
+        Log.i(TAG, "submitCommoditySuccess: ");
+        finish();
+    }
+
+    @Override
+    public void submitCommodityFail(String code, String message) {
+        Log.i(TAG, "submitCommodityFail: " + message);
     }
 }

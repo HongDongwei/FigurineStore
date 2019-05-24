@@ -78,7 +78,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dp"
-                android:text="元"/>
+                android:text="元" />
         </RelativeLayout>
 
         <View
@@ -142,9 +142,9 @@
                 android:id="@+id/tv_name_change"
                 android:layout_width="150dp"
                 android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
                 android:layout_marginRight="39dp"
                 android:gravity="center_vertical|right"
-                android:layout_alignParentRight="true"
                 android:textColor="@color/grey" />
 
         </RelativeLayout>
@@ -272,16 +272,28 @@
         <TextView
             android:id="@+id/tv_save"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_marginLeft="30dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="20dp"
             android:layout_marginRight="30dp"
             android:background="@drawable/bg_save"
             android:gravity="center"
             android:text="保存"
             android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textSize="15sp" />
 
+        <TextView
+            android:id="@+id/tv_logout"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/bg_logout"
+            android:gravity="center"
+            android:text="退出登录"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
 
     </LinearLayout>
 </ScrollView>
