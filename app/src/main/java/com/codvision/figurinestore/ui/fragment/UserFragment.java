@@ -6,12 +6,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.SpannedString;
+import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,16 +30,25 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.codvision.figurinestore.R;
 import com.codvision.figurinestore.App;
+import com.codvision.figurinestore.module.bean.AddressBean;
 import com.codvision.figurinestore.module.bean.User;
 import com.codvision.figurinestore.presenter.UserLoginPresenter;
 import com.codvision.figurinestore.presenter.UserSubmitPresenter;
 import com.codvision.figurinestore.presenter.contract.UserLoginContract;
 import com.codvision.figurinestore.presenter.contract.UserSubmitContract;
+import com.codvision.figurinestore.utils.AreaPickerView;
 import com.codvision.figurinestore.utils.DateTimeDialogOnlyYMD;
 import com.codvision.figurinestore.utils.SharedPreferenceUtils;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
@@ -57,6 +69,12 @@ public class UserFragment extends Fragment implements View.OnClickListener, User
     private int checkdItem = 0;
     private UserLoginPresenter userLoginPresenter;
     private UserSubmitPresenter userSubmitPresenter;
+    private String uri;
+    private boolean imageBack;
+
+    private AreaPickerView areaPickerView;
+    private List<AddressBean> addressBeans;
+    private int[] i;
 
     @Nullable
     @Override
@@ -64,8 +82,10 @@ public class UserFragment extends Fragment implements View.OnClickListener, User
         view = inflater.inflate(R.layout.fragment_user, container, false);
         initView();
         initEvent();
+        initCity();
         return view;
     }
+
 
     @Override
     public void onResume() {
@@ -86,18 +106,10 @@ public class UserFragment extends Fragment implements View.OnClickListener, User
         userLoginPresenter = new UserLoginPresenter(this, getActivity());
         userSubmitPresenter = new UserSubmitPresenter(this, getActivity());
 
-
     }
 
     private void initDate() {
-        user = SharedPreferenceUtils.getUser(getActivity());
-        tvSexChange.setText(sexArry[user.getGender()]);
-        tvNameChange.setText(user.getUsername());
-        tvSignChange.setText(user.getSign());
-        checkdItem = user.getGender();
-        tvMoneyChange.setText(user.getBalance() + "");
-        tvTelChange.setText(user.getPhone());
-        tvAddressChange.setText(user.getAddress());
+        userLoginPresenter.login(SharedPreferenceUtils.getUserName(getActivity()), SharedPreferenceUtils.getPwd(getActivity()));
     }
 
 
@@ -108,8 +120,6 @@ public class UserFragment extends Fragment implements View.OnClickListener, User
         tvTelChange.setOnClickListener(this);
         tvSave.setOnClickListener(this);
         tvAddressChange.setOnClickListener(this);
-        //初始化加载
-        changeHeadPic(R.drawable.head);
     }
 
 
@@ -130,7 +140,7 @@ public class UserFragment extends Fragment implements View.OnClickListener, User
         final EditText userInput = (EditText) nameView.findViewById(R.id.et_name_change);
         SpannableString ss = new SpannableString(title);
         // 新建一个属性对象,设置文字的大小
-        AbsoluteSizeSpan ass = new AbsoluteSizeSpan(8, true);
+        AbsoluteSizeSpan ass = new AbsoluteSizeSpan(15, true);
         // 附加属性到文本
         ss.setSpan(ass, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         userInput.setHint(new SpannedString(ss));
@@ -189,10 +199,13 @@ public class UserFragment extends Fragment implements View.OnClickListener, User
                 user.setGender(checkdItem);
                 user.setSign(tvSignChange.getText().toString().trim());
                 user.setAddress(tvAddressChange.getText().toString().trim());
+                user.setImage(uri);
                 userSubmitPresenter.submit(user);
                 break;
             case R.id.tv_address_change:
-                onCreateDialog("请输入您的地址!", tvAddressChange);
+                i = null;
+                areaPickerView.setSelect(i);
+                areaPickerView.show();
                 break;
             default:
                 break;
@@ -203,13 +216,70 @@ public class UserFragment extends Fragment implements View.OnClickListener, User
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
+            if (data != null) {
+                uri = String.valueOf(data.getData());
+                user.setImage(uri);
+                changeHeadPic(data.getData());
+                imageBack = true;
+            }
             //     ivHeadChoice.setImageURI(data.getData());
-            changeHeadPic(data.getData());
+
         }
+    }
+
+    private void initCity() {
+
+        Gson gson = new Gson();
+        addressBeans = gson.fromJson(getCityJson(), new TypeToken<List<AddressBean>>() {
+        }.getType());
+
+        areaPickerView = new AreaPickerView(getActivity(), R.style.Dialog, addressBeans);
+        areaPickerView.setAreaPickerViewCallback(new AreaPickerView.AreaPickerViewCallback() {
+            @Override
+            public void callback(int... value) {
+                i = value;
+                if (value.length == 3)
+                    tvAddressChange.setText(addressBeans.get(value[0]).getLabel() + "-" + addressBeans.get(value[0]).getChildren().get(value[1]).getLabel() + "-" + addressBeans.get(value[0]).getChildren().get(value[1]).getChildren().get(value[2]).getLabel());
+                else
+                    tvAddressChange.setText(addressBeans.get(value[0]).getLabel() + "-" + addressBeans.get(value[0]).getChildren().get(value[1]).getLabel());
+            }
+        });
+    }
+
+    private String getCityJson() {
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
+            AssetManager assetManager = getActivity().getAssets();
+            BufferedReader bf = new BufferedReader(new InputStreamReader(
+                    assetManager.open("region.json")));
+            String line;
+            while ((line = bf.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return stringBuilder.toString();
     }
 
     @Override
     public void loginSuccess() {
+        user = SharedPreferenceUtils.getUser(getActivity());
+        tvSexChange.setText(sexArry[user.getGender()]);
+        tvNameChange.setText(user.getUsername());
+        tvSignChange.setText(user.getSign());
+        checkdItem = user.getGender();
+        tvMoneyChange.setText(user.getBalance() + "");
+        tvTelChange.setText(user.getPhone());
+        tvAddressChange.setText(user.getAddress());
+        if (!imageBack) {
+            if (!TextUtils.isEmpty(user.getImage())) {
+                changeHeadPic(Uri.parse(user.getImage()));
+            } else {
+                changeHeadPic(R.drawable.head1);
+            }
+        }
+        imageBack = false;
     }
 
     @Override

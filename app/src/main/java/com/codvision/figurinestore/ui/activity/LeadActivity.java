@@ -64,7 +64,7 @@ public class LeadActivity extends AppCompatActivity implements UserLoginContract
                     startActivity(intent);
                     finish();
                 } else {
-                    Intent intent = new Intent(LeadActivity.this, MainActivity.class);
+                    Intent intent = new Intent(LeadActivity.this, LoginActivity.class);
                     startActivity(intent);
                     finish();
                 }

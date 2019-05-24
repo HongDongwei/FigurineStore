@@ -9,7 +9,7 @@ public class ConnectUtils {
     private static final String TAG = "HeartBeatService";
 
     public static final int REPEAT_TIME = 5;//表示重连次数
-    public static final String HOST = "192.168.1.104";//表示IP地址
+    public static final String HOST = "192.168.1.105";//表示IP地址
     public static final int PORT = 60000;//表示端口号
     public static final int TIMEOUT = 5;//设置连接超时时间,超过5s还没连接上便抛出异常
 

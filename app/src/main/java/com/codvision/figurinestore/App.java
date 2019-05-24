@@ -3,6 +3,7 @@ package com.codvision.figurinestore;
 import android.app.Application;
 import android.content.Context;
 
+import com.codvision.figurinestore.module.bean.Msg;
 import com.codvision.figurinestore.module.cookie.CookieReadInterceptor;
 import com.codvision.figurinestore.module.cookie.CookiesSaveInterceptor;
 import com.codvision.figurinestore.utils.InterceptorUtil;
@@ -12,6 +13,7 @@ import com.kaopiz.kprogresshud.KProgressHUD;
 
 import org.apache.mina.core.session.IoSession;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -26,7 +28,10 @@ public class App extends Application {
     public static String PAD = "";
     public static String MESSAGE = "";
     public static KProgressHUD kProgressHUD;
-    public static IoSession session=null;
+    public static IoSession session = null;
+
+    public static ArrayList<Msg> msgArrayList = new ArrayList<>();
+    public static int fragment = 1;
 
     @Override
     public void onCreate() {

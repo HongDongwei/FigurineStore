@@ -1,6 +1,7 @@
 package com.codvision.figurinestore.heartbeat;
 
 import com.codvision.figurinestore.App;
+import com.codvision.figurinestore.module.bean.Msg;
 import com.codvision.figurinestore.utils.ConnectUtils;
 import com.codvision.figurinestore.utils.HexUtils;
 
@@ -28,10 +29,15 @@ public class HeartBeatHandler extends IoHandlerAdapter {
         byte[] data = HexUtils.hexStringToBytes(result);
         String str = new String(data, "gbk");
         App.MESSAGE = str;
-
-        if (null != messageCallback) {
-            messageCallback.onReceived(str);
+        if (App.fragment == 2) {
+            if (null != messageCallback) {
+                messageCallback.onReceived(str);
+            }
+        } else {
+            Msg msg = new Msg(str, Msg.TYPE_RECEIVED);
+            App.msgArrayList.add(msg);
         }
+
 
         System.out.println(ConnectUtils.stringNowTime() + " : Use:messageReceived" + str);
         System.out.println(ConnectUtils.stringNowTime() + " : Use:messageReceived" + result);

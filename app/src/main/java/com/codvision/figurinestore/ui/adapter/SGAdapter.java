@@ -10,7 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codvision.figurinestore.R;
+import com.codvision.figurinestore.module.bean.Commodity;
 import com.codvision.figurinestore.module.bean.SanGuoBean;
+
 import java.util.List;
 
 /**
@@ -25,7 +27,7 @@ public class SGAdapter extends BaseAdapter {
     /**
      * 数据源
      */
-    private List<SanGuoBean> mDatas;
+    private List<Commodity> commodities;
 
 
     /**
@@ -34,19 +36,19 @@ public class SGAdapter extends BaseAdapter {
      * @param context
      * @param datas
      */
-    public SGAdapter(Context context, List<SanGuoBean> datas) {
+    public SGAdapter(Context context, List<Commodity> datas) {
         mContext = context;
-        mDatas = datas;
+        commodities = datas;
     }
 
     @Override
     public int getCount() {
-        return mDatas.size();
+        return commodities.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return mDatas.get(i);
+        return commodities.get(i);
     }
 
     @Override
@@ -60,21 +62,22 @@ public class SGAdapter extends BaseAdapter {
         if (null == view) {
             vh = new ViewHolder();
             LayoutInflater mInflater = LayoutInflater.from(mContext);
-            view = mInflater.inflate(R.layout.sg_item, null);
-            vh.mNameTv = (TextView) view.findViewById(R.id.tv_sgname);
-            vh.mPetNmaeTv = (TextView) view.findViewById(R.id.tv_sgpetname);
-            vh.mDesTv = (TextView) view.findViewById(R.id.tv_sgdes);
+            view = mInflater.inflate(R.layout.search_item, null);
+            vh.tvComName = (TextView) view.findViewById(R.id.tv_com_name);
+            vh.tvComPrice = (TextView) view.findViewById(R.id.tv_com_price);
+            vh.tvComChoice = (TextView) view.findViewById(R.id.tv_com_choice);
             vh.mHeadImg = (ImageView) view.findViewById(R.id.iv_sghead);
             view.setTag(vh);
         } else {
             vh = (ViewHolder) view.getTag();
         }
-        SanGuoBean bean = (SanGuoBean) getItem(position);
+        Commodity bean = (Commodity) getItem(position);
         if (null != bean) {
-            vh.mNameTv.setText(bean.getSgName());
-            vh.mDesTv.setText(bean.getSgDescribe());
-            vh.mPetNmaeTv.setText(bean.getSgPetName());
-            vh.mHeadImg.setImageResource(bean.getSgHeadBp());
+            vh.tvComName.setText(bean.getName());
+            vh.tvComChoice.setText(bean.getChoice() + "");
+            vh.tvComPrice.setText(bean.getPrice() + "");
+            int resid = mContext.getResources().getIdentifier(bean.getPic1(), "drawable", mContext.getPackageName());
+            vh.mHeadImg.setBackgroundResource(resid);
         }
         return view;
     }
@@ -87,15 +90,15 @@ public class SGAdapter extends BaseAdapter {
         /**
          * 姓名
          */
-        TextView mNameTv;
+        TextView tvComName;
         /**
-         * 描述
+         * 热度
          */
-        TextView mDesTv;
+        TextView tvComChoice;
         /**
-         * 字
+         * 价格
          */
-        TextView mPetNmaeTv;
+        TextView tvComPrice;
         /**
          * 头像
          */

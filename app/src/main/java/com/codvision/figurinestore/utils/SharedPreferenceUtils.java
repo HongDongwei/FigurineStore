@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.codvision.figurinestore.module.bean.User;
+
 /**
  * Created by sxy on 2019/5/9 16:50
  * todo
@@ -42,7 +43,20 @@ public class SharedPreferenceUtils {
         return new User(preferences);
     }
 
+    public static String getImage(Context context) {
+        return getSharedPreference(context, User.class.getSimpleName()).getString("image", null);
+    }
 
+    public static String getPhone(Context context) {
+        return getSharedPreference(context, User.class.getSimpleName()).getString("phone", null);
+    }
+
+    public static String getAddress(Context context) {
+        return getSharedPreference(context, User.class.getSimpleName()).getString("address", null);
+    }
+    public static float getBalance(Context context) {
+        return getSharedPreference(context, User.class.getSimpleName()).getFloat("balance", 0);
+    }
     public static String getPwd(Context context) {
         return getSharedPreference(context, User.class.getSimpleName()).getString("password", null);
     }

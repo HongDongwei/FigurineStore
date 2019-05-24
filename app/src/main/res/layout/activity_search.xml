@@ -6,37 +6,70 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_margin="8dip"
+        android:layout_height="50dp"
+        android:background="@color/themeColor">
+
+        <ImageButton
+            android:id="@+id/ib_user_back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/white_left" />
+
+        <TextView
+            android:id="@+id/tv_search_back"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="搜索
+"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
         android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/search_bule" />
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/ib_search_voice"
+            android:background="@drawable/search_bg"
+            android:paddingLeft="35dp"
+            android:textSize="14sp" />
 
         <ImageButton
             android:id="@+id/ib_search_voice"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
             android:background="@drawable/microphone" />
 
-        <ImageButton
-            android:id="@+id/ib_search_hear"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/wheat_blue" />
-
-        <com.codvision.figurinestore.utils.CommolySearchView
-            android:id="@+id/csv_show"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@drawable/search_bg"
-            search:SearchTextColor="@color/themeColor"
-            search:SearchTextSize="14sp" />
-
-    </LinearLayout>
+    </RelativeLayout>
 
 
     <ListView
         android:id="@+id/lv_show"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></ListView>
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp" />
 </LinearLayout>

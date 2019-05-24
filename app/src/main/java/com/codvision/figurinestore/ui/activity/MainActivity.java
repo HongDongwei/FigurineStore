@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.codvision.figurinestore.App;
 import com.codvision.figurinestore.R;
 import com.codvision.figurinestore.heartbeat.HeartBeatService;
 import com.codvision.figurinestore.heartbeat.IMessageCallback;
@@ -84,8 +85,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fragmentManager.beginTransaction().replace(R.id.main_fragment, homeFragment).commit();
         setClick(tvHome);
 
+        int id = getIntent().getIntExtra("id", 0);
+        if (id == 2) {
+            App.fragment = 2;
+            fragmentManager.beginTransaction().replace(R.id.main_fragment, messageFragment).commit();
+            setClick(tvMessage);
+        }
+        if (id == 3) {
+            App.fragment = 3;
+            fragmentManager.beginTransaction().replace(R.id.main_fragment, orderFragment).commit();
+            setClick(tvOrder);
+        }
         toolbar.setTitle("首页");
         toolbar.hideLeftButton();
+        toolbar.hideRightButton();
     }
 
     private void setClick(TextView textView) {
@@ -141,21 +154,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 setClick(tvHome);
                 toolbar.setTitle("首页");
                 fragmentManager.beginTransaction().replace(R.id.main_fragment, homeFragment).commit();
+                App.fragment = 1;
                 break;
             case R.id.tv_message:
                 setClick(tvMessage);
                 toolbar.setTitle("消息");
                 fragmentManager.beginTransaction().replace(R.id.main_fragment, messageFragment).commit();
+                App.fragment = 2;
                 break;
             case R.id.tv_order:
                 setClick(tvOrder);
                 toolbar.setTitle("订单");
                 fragmentManager.beginTransaction().replace(R.id.main_fragment, orderFragment).commit();
+                App.fragment = 3;
                 break;
             case R.id.tv_user:
                 setClick(tvUser);
                 toolbar.setTitle("用户");
                 fragmentManager.beginTransaction().replace(R.id.main_fragment, userFragment).commit();
+                App.fragment = 4;
                 break;
             default:
                 break;
@@ -202,7 +219,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mIsBound = false;
         }
     }
-
 
 
 }

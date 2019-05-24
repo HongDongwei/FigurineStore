@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.codvision.figurinestore.R;
@@ -32,8 +34,12 @@ public class BuyDetailActivity extends AppCompatActivity implements CommodityGet
     private TextView tvGoodPrice;
     private TextView tvGoodTime;
     private TextView tvGoodSign;
+    private ImageButton ibMessage;
+    private ImageButton ibOrder;
+    private Button btBuy;
     private CommodityGetByIdPresenter commodityGetByIdPresenter;
     private List<Integer> images = new ArrayList<>();
+    private String NewsID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +56,15 @@ public class BuyDetailActivity extends AppCompatActivity implements CommodityGet
         tvGoodPrice = findViewById(R.id.tv_good_price);
         tvGoodTime = findViewById(R.id.tv_good_time);
         tvGoodSign = findViewById(R.id.tv_good_sign);
+        ibMessage = findViewById(R.id.ib_message);
+        ibOrder = findViewById(R.id.ib_order);
+        btBuy = findViewById(R.id.bt_buy);
         commodityGetByIdPresenter = new CommodityGetByIdPresenter(this, this);
         Intent intent = getIntent();
-        String NewsID = intent.getStringExtra("goodId");
+        NewsID = intent.getStringExtra("goodId");
         commodityGetByIdPresenter.getCommodity(new CommodityGetById(Integer.parseInt(NewsID)));
         toolbar.setTitle("购买页面");
+        toolbar.hideRightButton();
     }
 
     private void initBanner(Commodity commodity) {
@@ -82,6 +92,30 @@ public class BuyDetailActivity extends AppCompatActivity implements CommodityGet
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+        ibMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(BuyDetailActivity.this, MainActivity.class);
+                intent.putExtra("id", 2);
+                startActivity(intent);
+            }
+        });
+        ibOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(BuyDetailActivity.this, MainActivity.class);
+                intent.putExtra("id", 3);
+                startActivity(intent);
+            }
+        });
+        btBuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(BuyDetailActivity.this, OrderActivity.class);
+                intent.putExtra("goodId", Integer.parseInt(NewsID));
+                startActivity(intent);
             }
         });
     }

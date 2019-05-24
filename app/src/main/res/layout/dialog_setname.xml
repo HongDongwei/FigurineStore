@@ -10,6 +10,11 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="32dp"
-        android:layout_marginRight="16dp" />
+        android:layout_marginRight="16dp"
+        android:background="@drawable/bg_chat"
+        android:hint="请输入"
+        android:textSize="15sp"
+        android:maxLines="1"
+        android:padding="10dp" />
 
 </LinearLayout>

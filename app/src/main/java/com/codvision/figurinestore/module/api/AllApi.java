@@ -6,6 +6,11 @@ import com.codvision.figurinestore.module.bean.Commodity;
 import com.codvision.figurinestore.module.bean.CommodityGetById;
 import com.codvision.figurinestore.module.bean.InsertId;
 import com.codvision.figurinestore.module.bean.CommodityGet;
+import com.codvision.figurinestore.module.bean.OrderTableDelete;
+import com.codvision.figurinestore.module.bean.OrderTableInsert;
+import com.codvision.figurinestore.module.bean.OrderTableRecieve;
+import com.codvision.figurinestore.module.bean.OrderTableSelect;
+import com.codvision.figurinestore.module.bean.OrderTableSubmit;
 import com.codvision.figurinestore.module.bean.UserLogin;
 import com.codvision.figurinestore.module.bean.UserSubmit;
 
@@ -46,9 +51,34 @@ public interface AllApi {
      */
     @POST(ApiAddress.COMMODITY_SELECT)
     Observable<WrapperEntity<ArrayList<Commodity>>> getCommodity(@Body CommodityGet commodityGet);
+
     /**
      * 获取商品
      */
     @POST(ApiAddress.COMMODITY_SELECT_BY_ID)
     Observable<WrapperEntity<Commodity>> getCommodityById(@Body CommodityGetById commodityGetById);
+
+    /**
+     * 插入订单
+     */
+    @POST(ApiAddress.ORDER_INSERT)
+    Observable<WrapperEntity<InsertId>> orderInsert(@Body OrderTableInsert orderTableInsert);
+
+    /**
+     * 获取订单
+     */
+    @POST(ApiAddress.ORDER_SELECT)
+    Observable<WrapperEntity<ArrayList<OrderTableRecieve>>> orderSelect(@Body OrderTableSelect orderTableSelect);
+
+    /**
+     * 插入订单
+     */
+    @POST(ApiAddress.ORDER_SUBMIT)
+    Observable<WrapperEntity<InsertId>> orderSubmit(@Body OrderTableSubmit orderTableSubmit);
+
+    /**
+     * 删除订单
+     */
+    @POST(ApiAddress.ORDER_DELETE)
+    Observable<WrapperEntity<InsertId>> orderDelete(@Body OrderTableDelete orderTableDelete);
 }

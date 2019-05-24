@@ -26,6 +26,7 @@ public class User implements Serializable {
     private float balance;
 
     private String address;
+    private boolean state;
 
     public User(int id, String username, String password, String phone, String sign, String image, int gender, float balance, String address) {
         this.id = id;
@@ -53,6 +54,7 @@ public class User implements Serializable {
         editor.putInt("gender", gender);
         editor.putFloat("balance", balance);
         editor.putString("address", address);
+        editor.putBoolean("state", state);
     }
 
     public User(SharedPreferences preferences) {
@@ -65,6 +67,7 @@ public class User implements Serializable {
         gender = preferences.getInt("gender", 0);
         balance = preferences.getFloat("balance", 0);
         address = preferences.getString("address", "您还没有地址");
+        state = preferences.getBoolean("state", false);
     }
 
     public User(UserLogin userLogin, String pwd, boolean state) {
@@ -77,6 +80,7 @@ public class User implements Serializable {
         this.sign = userLogin.getSign();
         this.balance = userLogin.getBalance();
         this.address = userLogin.getAddress();
+        this.state = state;
     }
 
     public void setId(int id) {
@@ -145,5 +149,13 @@ public class User implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public boolean isState() {
+        return state;
+    }
+
+    public void setState(boolean state) {
+        this.state = state;
     }
 }

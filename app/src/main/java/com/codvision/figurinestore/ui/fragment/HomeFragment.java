@@ -5,14 +5,12 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -34,9 +32,7 @@ import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class HomeFragment extends Fragment implements View.OnClickListener, CommodityGetContract.View {
@@ -73,11 +69,34 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Comm
     @Override
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fagment_home, container, false);
+        view = inflater.inflate(R.layout.fragment_home, container, false);
         initView();
         initBannner();
         initEvent();
         return view;
+    }
+
+    private void initView() {
+        llHomeSearch = view.findViewById(R.id.ll_home_search);
+        tvHomeBanner1 = view.findViewById(R.id.tv_home_banner1);
+        tvHomeBanner2 = view.findViewById(R.id.tv_home_banner2);
+        tvHomeBanner3 = view.findViewById(R.id.tv_home_banner3);
+        tvHomeBanner4 = view.findViewById(R.id.tv_home_banner4);
+        ivHomeFigurine = view.findViewById(R.id.iv_home_figurine);
+        ivHomeModel = view.findViewById(R.id.iv_home_model);
+        ivHomePeriphery = view.findViewById(R.id.iv_home_periphery);
+        ivHomeAll = view.findViewById(R.id.iv_home_all);
+        gridView = view.findViewById(R.id.gridview);
+        bannerHome = view.findViewById(R.id.banner_home);
+        commodityAdapter = new CommodityAdapter(getActivity(), commodityList);
+        gridView.setAdapter(commodityAdapter);
+        commodityGetPresenter = new CommodityGetPresenter(this, getActivity());
+        commodityGetPresenter.getCommodity(new CommodityGet("id"));
+        changeHeadPic(R.drawable.head1, ivHomeFigurine);
+        changeHeadPic(R.drawable.head2, ivHomeModel);
+        changeHeadPic(R.drawable.head3, ivHomePeriphery);
+        changeHeadPic(R.drawable.head4, ivHomeAll);
+        setClick(tvHomeBanner1);
     }
 
     private void initBannner() {
@@ -110,28 +129,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Comm
         bannerHome.start();
     }
 
-    private void initView() {
-        llHomeSearch = view.findViewById(R.id.ll_home_search);
-        tvHomeBanner1 = view.findViewById(R.id.tv_home_banner1);
-        tvHomeBanner2 = view.findViewById(R.id.tv_home_banner2);
-        tvHomeBanner3 = view.findViewById(R.id.tv_home_banner3);
-        tvHomeBanner4 = view.findViewById(R.id.tv_home_banner4);
-        ivHomeFigurine = view.findViewById(R.id.iv_home_figurine);
-        ivHomeModel = view.findViewById(R.id.iv_home_model);
-        ivHomePeriphery = view.findViewById(R.id.iv_home_periphery);
-        ivHomeAll = view.findViewById(R.id.iv_home_all);
-        gridView = view.findViewById(R.id.gridview);
-        bannerHome = view.findViewById(R.id.banner_home);
-        commodityAdapter = new CommodityAdapter(getActivity(), commodityList);
-        gridView.setAdapter(commodityAdapter);
-        commodityGetPresenter = new CommodityGetPresenter(this, getActivity());
-        commodityGetPresenter.getCommodity(new CommodityGet("id"));
-        changeHeadPic(R.drawable.head1, ivHomeFigurine);
-        changeHeadPic(R.drawable.head2, ivHomeModel);
-        changeHeadPic(R.drawable.head3, ivHomePeriphery);
-        changeHeadPic(R.drawable.head4, ivHomeAll);
-        setClick(tvHomeBanner1);
-    }
+
 
     private void initEvent() {
         llHomeSearch.setOnClickListener(this);

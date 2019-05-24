@@ -1,19 +1,30 @@
 package com.codvision.figurinestore.ui.activity;
 
 import android.Manifest;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.codvision.figurinestore.R;
+import com.codvision.figurinestore.module.bean.Commodity;
+import com.codvision.figurinestore.module.bean.CommodityGet;
+import com.codvision.figurinestore.presenter.CommodityGetPresenter;
+import com.codvision.figurinestore.presenter.contract.CommodityGetContract;
 import com.codvision.figurinestore.ui.adapter.SGAdapter;
 import com.codvision.figurinestore.module.bean.SanGuoBean;
 import com.codvision.figurinestore.utils.CommolySearchView;
@@ -39,7 +50,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class SearchActivity extends AppCompatActivity implements View.OnClickListener {
+public class SearchActivity extends AppCompatActivity implements View.OnClickListener, CommodityGetContract.View {
     /**
      * TAG
      */
@@ -49,20 +60,15 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
      */
     private ListView mListView;
     private ImageButton ibSearchVoice;
-    private ImageButton ibSearchHear;
-    /**
-     * 三国通用搜索框
-     */
-    private CommolySearchView<SanGuoBean> mSGCommolySearchView;
-    /**
-     * 三国数据源
-     */
-    private List<SanGuoBean> mSGDatas;
-    /**
-     * 三国适配器
-     */
+    private CommodityGetPresenter commodityGetPresenter;
+    private EditText etSearch;
     private SGAdapter sgAdapter;
-    // 用HashMap存储听写结果
+    private ImageButton ibBack;
+    /**
+     * 数据源
+     */
+    private List<Commodity> commodities = new ArrayList<>();
+    private List<Commodity> commodityList = new ArrayList<>();
     private HashMap<String, String> mIatResults = new LinkedHashMap<String, String>();
 
     @Override
@@ -70,99 +76,72 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         requestRecordAudioPermission();
-        initDataI();
-        initViewI();
-        initSpeech() ;
+        initView();
+        initEvent();
+        initSpeech();
     }
 
-    /**
-     * 初始化数据
-     */
-    private void initDataI() {
-        mSGDatas = new ArrayList<SanGuoBean>();
-        SanGuoBean sgbean1 = new SanGuoBean();
-        sgbean1.setSgName("刘备");
-        sgbean1.setSgPetName("玄德");
-        sgbean1.setSgHeadBp(R.drawable.head);
-        sgbean1.setSgDescribe("刘备（161年－223年6月10日），字玄德，东汉末年幽州涿郡涿县（今河北省涿州市）人");
-        SanGuoBean sgbean2 = new SanGuoBean();
-        sgbean2.setSgName("关羽");
-        sgbean2.setSgPetName("云长");
-        sgbean2.setSgHeadBp(R.drawable.head);
-        sgbean2.setSgDescribe("关羽（？－220年），本字长生，后改字云长，河东郡解良（今山西运城）人");
-        SanGuoBean sgbean3 = new SanGuoBean();
-        sgbean3.setSgName("张飞");
-        sgbean3.setSgPetName("翼德");
-        sgbean3.setSgHeadBp(R.drawable.head);
-        sgbean3.setSgDescribe("张飞（？－221年），字益德[1] ，幽州涿郡（今河北省保定市涿州市）人氏");
-        SanGuoBean sgbean4 = new SanGuoBean();
-        sgbean4.setSgName("赵云");
-        sgbean4.setSgPetName("子龙");
-        sgbean4.setSgHeadBp(R.drawable.head);
-        sgbean4.setSgDescribe("赵云（？－229年），字子龙，常山真定（今河北省正定）人");
-        SanGuoBean sgbean5 = new SanGuoBean();
-        sgbean5.setSgName("马超");
-        sgbean5.setSgPetName("孟起");
-        sgbean5.setSgHeadBp(R.drawable.head);
-        sgbean5.setSgDescribe("马超（176年－222年），字孟起，司隶部扶风郡茂陵（今陕西兴平）人");
-        SanGuoBean sgbean6 = new SanGuoBean();
-        sgbean6.setSgName("黄忠");
-        sgbean6.setSgPetName("汉升");
-        sgbean6.setSgHeadBp(R.drawable.head);
-        sgbean6.setSgDescribe("黄忠（？－220年），字汉升（一作“汉叔”[1] ），南阳（今河南南阳）人");
-        SanGuoBean sgbean7 = new SanGuoBean();
-        sgbean7.setSgName("张辽");
-        sgbean7.setSgPetName("文远");
-        sgbean7.setSgHeadBp(R.drawable.head);
-        sgbean7.setSgDescribe("张辽（169年－222年），字文远，雁门马邑（今山西朔州）人");
-        mSGDatas.add(sgbean1);
-        mSGDatas.add(sgbean2);
-        mSGDatas.add(sgbean3);
-        mSGDatas.add(sgbean4);
-        mSGDatas.add(sgbean5);
-        mSGDatas.add(sgbean6);
-        mSGDatas.add(sgbean7);
-
-    }
 
     /**
      * 初始化控件
      */
-    private void initViewI() {
-        mSGCommolySearchView = (CommolySearchView) findViewById(R.id.csv_show);
+    private void initView() {
+        etSearch = findViewById(R.id.et_search);
         mListView = (ListView) findViewById(R.id.lv_show);
         ibSearchVoice = findViewById(R.id.ib_search_voice);
-        ibSearchHear = findViewById(R.id.ib_search_hear);
-        ibSearchVoice.setOnClickListener(this);
-        ibSearchHear.setOnClickListener(this);
-
-        sgAdapter = new SGAdapter(this, mSGDatas);
+        ibBack = findViewById(R.id.ib_user_back);
+        commodityGetPresenter = new CommodityGetPresenter(this, this);
+        commodityGetPresenter.getCommodity(new CommodityGet("id"));
+        sgAdapter = new SGAdapter(this, commodities);
         mListView.setAdapter(sgAdapter);
-        // 设置数据源
-        mSGCommolySearchView.setDatas(mSGDatas);
-        // 设置适配器
-        mSGCommolySearchView.setAdapter(sgAdapter);
-        // 设置筛选数据
-        mSGCommolySearchView.setSearchDataListener(new CommolySearchView.SearchDatas<SanGuoBean>() {
-            @Override
-            public List<SanGuoBean> filterDatas(List<SanGuoBean> datas, List<SanGuoBean> filterdatas, String inputstr) {
-                for (int i = 0; i < datas.size(); i++) {
-                    // 筛选条件
-                    if ((datas.get(i).getSgDescribe()).contains(inputstr) || datas.get(i).getSgName().contains(inputstr) || datas.get(i).getSgPetName().contains(inputstr)) {
-                        filterdatas.add(datas.get(i));
-                    }
-                }
-                return filterdatas;
-            }
-        });
+
+    }
+
+
+    private void initEvent() {
+        ibSearchVoice.setOnClickListener(this);
+        ibBack.setOnClickListener(this);
+        etSearch.addTextChangedListener(textWatcher);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(SearchActivity.this, mSGCommolySearchView.getFilterDatas().get(i).getSgName() + "字" + mSGCommolySearchView.getFilterDatas().get(i).getSgPetName() + "\n" + mSGCommolySearchView.getFilterDatas().get(i).getSgDescribe(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent();
+                intent.putExtra("goodId", commodities.get(i).getId() + "");//设置参数,""
+                intent.setClass(SearchActivity.this, BuyDetailActivity.class);//从哪里跳到哪里
+                startActivity(intent);
             }
+
         });
     }
 
+    private TextWatcher textWatcher = new TextWatcher() {
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before,
+                                  int count) {
+            String content = etSearch.getText().toString().trim();
+            commodities.clear();
+            if (TextUtils.isEmpty(content)) {
+                commodityGetPresenter.getCommodity(new CommodityGet("id"));
+            }
+            for (int i = 0; i < commodityList.size(); i++) {
+                if (commodityList.get(i).getName().contains(content)) {
+                    commodities.add(commodityList.get(i));
+                }
+            }
+            sgAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count,
+                                      int after) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
 
     private void initSpeech() {
         // 将“12345678”替换成您申请的 APPID，申请地址： http://www.xfyun.cn
@@ -175,9 +154,12 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         switch (v.getId()) {
             case R.id.ib_search_voice: //语音识别（把声音转文字）
                 startSpeechDialog();
+
                 break;
-            case R.id.ib_search_hear:// 语音合成（把文字转声音）
-                speekText();
+            case R.id.ib_user_back:
+                finish();
+                break;
+            default:
                 break;
         }
 
@@ -197,9 +179,10 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 //仅支持保存为 pcm 和 wav 格式， 如果不需要保存合成音频，注释该行代码
         mTts.setParameter(SpeechConstant.TTS_AUDIO_PATH, "./sdcard/iflytek.pcm");
 //3.开始合成
-        mTts.startSpeaking(mSGCommolySearchView.getText(), new MySynthesizerListener());
+        mTts.startSpeaking(etSearch.getText().toString(), new MySynthesizerListener());
 
     }
+
 
     class MySynthesizerListener implements SynthesizerListener {
 
@@ -327,12 +310,14 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         @Override
         public void onResult(RecognizerResult results, boolean isLast) {
             String result = results.getResultString(); //为解析的
-            showTip(result);
+            //showTip(result);
             System.out.println(" 没有解析的 :" + result);
 
             String text = JsonParser.parseIatResult(result);//解析过后的
             System.out.println(" 解析后的 :" + text);
-
+            if (text.equals("。")) {
+                text = "";
+            }
             String sn = null;
             // 读取json结果中的 sn字段
             try {
@@ -349,8 +334,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 resultBuffer.append(mIatResults.get(key));
             }
 
-            mSGCommolySearchView.setText(resultBuffer.toString());// 设置输入框的文本
-            mSGCommolySearchView.setSelection();//把光标定位末尾
+            etSearch.setText(resultBuffer.toString());// 设置输入框的文本
+            etSearch.setSelection(etSearch.length());//把光标定位末尾
         }
 
         @Override
@@ -394,7 +379,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         public void onResult(RecognizerResult results, boolean isLast) {
             Log.e(TAG, results.getResultString());
             System.out.println(results.getResultString());
-            showTip(results.getResultString());
+            //showTip(results.getResultString());
         }
 
         // 会话发生错误回调接口
@@ -426,5 +411,21 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     private void showTip(String data) {
         Toast.makeText(this, data, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void getCommoditySuccess(List<Commodity> commodityList) {
+        this.commodities.clear();
+        this.commodityList.clear();
+        for (int i = 0; i < commodityList.size(); i++) {
+            this.commodities.add(commodityList.get(i));
+            this.commodityList.add(commodityList.get(i));
+        }
+        sgAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void getCommodityFail(String code, String message) {
+
     }
 }

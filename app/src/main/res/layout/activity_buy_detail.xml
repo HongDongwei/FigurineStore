@@ -58,7 +58,8 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical|right"
-                        android:text="价格：$"
+                        android:text="价格：¥"
+                        android:textColor="@color/white"
                         android:textSize="15sp" />
 
                     <TextView
@@ -68,6 +69,7 @@
                         android:layout_weight="2"
                         android:gravity="center_vertical|left"
                         android:text=""
+                        android:textColor="@color/white"
                         android:textSize="15sp" />
                 </LinearLayout>
 
@@ -82,7 +84,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:gravity="center_horizontal|bottom"
-                        android:text="截至时间:"
+                        android:text="剩余数量:"
                         android:textColor="@color/themeColor" />
 
                     <TextView
@@ -124,8 +126,8 @@
                     android:textSize="15sp" />
 
                 <ImageButton
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerInParent="true"
                     android:layout_marginRight="10dp"
@@ -147,6 +149,7 @@
                     android:orientation="horizontal">
 
                     <ImageButton
+                        android:id="@+id/ib_message"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="10dp"
@@ -157,6 +160,7 @@
                         android:background="@drawable/message_unclick" />
 
                     <ImageButton
+                        android:id="@+id/ib_order"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="10dp"
@@ -168,12 +172,14 @@
                 </LinearLayout>
 
                 <Button
+                    android:id="@+id/bt_buy"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginRight="10dp"
                     android:layout_weight="2"
                     android:background="@drawable/button_bg"
                     android:text="立即购买"
+                    android:textColor="@color/white"
                     android:textSize="15sp" />
             </LinearLayout>
         </LinearLayout>

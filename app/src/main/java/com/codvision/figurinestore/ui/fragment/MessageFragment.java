@@ -42,17 +42,7 @@ public class MessageFragment extends Fragment implements Handler.Callback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_message, container, false);
         initVeiw();
-        initEvent();
         return view;
-    }
-
-    private void initMsg() {
-        Msg msg1 = new Msg("Hellow guy", Msg.TYPE_RECEIVED);
-        msgArrayList.add(msg1);
-        Msg msg2 = new Msg("Who", Msg.TYPE_SENT);
-        msgArrayList.add(msg2);
-        Msg msg3 = new Msg("Bob", Msg.TYPE_RECEIVED);
-        msgArrayList.add(msg3);
     }
 
     private void initVeiw() {
@@ -61,8 +51,13 @@ public class MessageFragment extends Fragment implements Handler.Callback {
         msgRecyclerView = view.findViewById(R.id.msg_recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         msgRecyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new MsgAdapter(msgArrayList);
+        adapter = new MsgAdapter(getActivity(), msgArrayList);
         msgRecyclerView.setAdapter(adapter);
+        msgArrayList.clear();
+        for (int i = 0; i < App.msgArrayList.size(); i++) {
+            msgArrayList.add(App.msgArrayList.get(i));
+        }
+
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,6 +72,7 @@ public class MessageFragment extends Fragment implements Handler.Callback {
                     App.session.write(IoBuffer.wrap(b));
                     Msg msg = new Msg(content, Msg.TYPE_SENT);
                     msgArrayList.add(msg);
+                    App.msgArrayList.add(msg);
                     adapter.notifyItemChanged(msgArrayList.size() - 1);
                     msgRecyclerView.scrollToPosition(msgArrayList.size() - 1);
                     inpuText.setText("");
@@ -85,18 +81,16 @@ public class MessageFragment extends Fragment implements Handler.Callback {
         });
     }
 
-    private void initEvent() {
-    }
 
     @Override
     public boolean handleMessage(Message message) {
         if (message.what == 1) {
             Msg msg = new Msg(message.obj.toString(), Msg.TYPE_RECEIVED);
             msgArrayList.add(msg);
+            App.msgArrayList.add(msg);
             adapter.notifyItemChanged(msgArrayList.size() - 1);
             msgRecyclerView.scrollToPosition(msgArrayList.size() - 1);
             Log.i(TAG, "handleMessage: " + message.obj.toString());
-            Toast.makeText(getActivity(), message.obj.toString(), Toast.LENGTH_LONG).show();
         }
         return true;
     }

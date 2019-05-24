@@ -47,11 +47,11 @@ public class UserLoginPresenter implements UserLoginContract.Presenter {
                     @Override
                     protected void onSuccees(WrapperEntity<UserLogin> wrapperEntity) throws Exception {
                         if (wrapperEntity.getStatus()) {
-                            view.loginSuccess();
                             User user = new User(wrapperEntity.getData(), pwd, true);
                             Log.i(TAG, "onSuccees: name.pwad=" + user.getPassword());
                             SharedPreferenceUtils.clearLoginInfo(context);
                             SharedPreferenceUtils.putSelfInfo(context, user);
+                            view.loginSuccess();
                         } else {
                             view.loginFail(wrapperEntity.getCode(), wrapperEntity.getCode() + ": " + wrapperEntity.getMessage());
                         }

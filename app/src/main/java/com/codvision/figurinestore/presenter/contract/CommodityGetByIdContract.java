@@ -18,7 +18,7 @@ public interface CommodityGetByIdContract {
         void getCommodity(CommodityGetById commodityGetById);
     }
 
-    public interface View extends BaseView<Presenter> {
+    public interface View extends BaseView<UserLoginContract.Presenter> {
 
         //成功
         void getCommoditySuccess(Commodity commodity);

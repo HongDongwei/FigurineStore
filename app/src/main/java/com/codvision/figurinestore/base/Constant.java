@@ -12,6 +12,8 @@ import java.util.List;
  */
 public class Constant {
     public static String logger = "logger";
+
+    public static int orderNum = 0;
     private static boolean isPrintLog = true; //是否打开日志打印
 
 
