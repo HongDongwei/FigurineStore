@@ -33,6 +33,19 @@
             android:gravity="center"
             android:text="已完成"
             android:textColor="@color/tab_color_selector" />
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/themeBgColor" />
+
+        <TextView
+            android:id="@+id/tv_order_state_close"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="已发货"
+            android:textColor="@color/tab_color_selector" />
     </LinearLayout>
 
     <View

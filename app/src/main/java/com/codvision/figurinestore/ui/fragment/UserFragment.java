@@ -1,6 +1,7 @@
 package com.codvision.figurinestore.ui.fragment;
 
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,17 +9,23 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.content.CursorLoader;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.SpannedString;
 import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +48,7 @@ import com.codvision.figurinestore.presenter.UserSubmitPresenter;
 import com.codvision.figurinestore.presenter.contract.UserLoginContract;
 import com.codvision.figurinestore.presenter.contract.UserSubmitContract;
 import com.codvision.figurinestore.ui.activity.LoginActivity;
+import com.codvision.figurinestore.ui.activity.MainActivity;
 import com.codvision.figurinestore.utils.AreaPickerView;
 import com.codvision.figurinestore.utils.CircleTransform;
 import com.codvision.figurinestore.utils.DateTimeDialogOnlyYMD;
@@ -50,7 +58,10 @@ import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
@@ -84,6 +95,9 @@ public class UserFragment extends Fragment implements View.OnClickListener, User
     private AreaPickerView areaPickerView;
     private List<AddressBean> addressBeans;
     private int[] i;
+
+    private Uri ImageUri;
+    private String fileName;
 
     @Nullable
     @Override
@@ -184,10 +198,32 @@ public class UserFragment extends Fragment implements View.OnClickListener, User
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_head_change:
-                Log.i(TAG, "onClick: iv_head_change ");
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                startActivityForResult(intent, 1);
+//                Log.i(TAG, "onClick: iv_head_change ");
+//                Intent intent = new Intent(Intent.ACTION_PICK);
+//                intent.setType("image/*");
+//                startActivityForResult(intent, 1);
+                //创建File对象，用于存储拍照后的图片
+//                File outputImage = new File(getActivity().getExternalCacheDir(), "outputImage.jpg");
+//                try {
+//                    if (outputImage.exists()) {
+//                        outputImage.delete();
+//                    }
+//                    outputImage.createNewFile();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                if (Build.VERSION.SDK_INT >= 24) {
+//                    ImageUri = FileProvider.getUriForFile(getActivity(),
+//                            "com.codvision.figurinestore.fileprovider", outputImage);
+//                } else {
+//                    ImageUri = Uri.fromFile(outputImage);
+//                }
+//                //启动相机程序
+//                Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+//                intent.putExtra(MediaStore.EXTRA_OUTPUT, ImageUri);
+
+                Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+                startActivityForResult(intent, 2);
                 break;
             case R.id.tv_sex_change:
                 showSexChooseDialog();
@@ -203,7 +239,7 @@ public class UserFragment extends Fragment implements View.OnClickListener, User
                 user.setGender(checkdItem);
                 user.setSign(tvSignChange.getText().toString().trim());
                 user.setAddress(tvAddressChange.getText().toString().trim());
-                user.setImage(uri);
+                user.setImage(fileName);
                 userSubmitPresenter.submit(user);
                 break;
             case R.id.tv_address_change:
@@ -235,8 +271,73 @@ public class UserFragment extends Fragment implements View.OnClickListener, User
                 //changeHeadPic(data.getData());
                 imageBack = true;
             }
+        } else if (requestCode == 2) {
+            String sdStatus = Environment.getExternalStorageState();
+            if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) { // 检测sd是否可用
+                return;
+            }
+            Bundle bundle = data.getExtras();
+            Bitmap bitmap = (Bitmap) bundle.get("data");// 获取相机返回的数据，并转换为Bitmap图片格式
+            FileOutputStream b = null;
+            File file = new File("/sdcard/myImage/");
+            file.mkdirs();// 创建文件夹，名称为myimage
+
+            //照片的命名，目标文件夹下，以当前时间数字串为名称，即可确保每张照片名称不相同。
+            String str = null;
+            Date date = null;
+            SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");//获取当前时间，进一步转化为字符串
+            date = new Date();
+            str = format.format(date);
+            fileName = "/sdcard/myImage/" + str + ".jpg";
+
+            try {
+                b = new FileOutputStream(fileName);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// 把数据写入文件
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    b.flush();
+                    b.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if (data != null) {
+                    Bitmap cameraBitmap = (Bitmap) data.getExtras().get("data");
+                    System.out.println("fdf=================" + data.getDataString());
+                    ivHeadChoice.setImageBitmap(cameraBitmap);
+
+                    System.out.println("成功======" + cameraBitmap.getWidth() + cameraBitmap.getHeight());
+                }
+            }
+
         }
     }
+
+    public Bitmap stringToBitmap(String string) {
+        // 将字符串转换成Bitmap类型
+        Bitmap bitmap = null;
+        try {
+            byte[] bitmapArray;
+            bitmapArray = Base64.decode(string, Base64.DEFAULT);
+            bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0,
+                    bitmapArray.length);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
+
+    public String bitmapToString(Bitmap bitmap) {
+        //将Bitmap转换成字符串
+        String string = null;
+        ByteArrayOutputStream bStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, bStream);
+        byte[] bytes = bStream.toByteArray();
+        string = Base64.encodeToString(bytes, Base64.DEFAULT);
+        return string;
+    }
+
 
     /**
      * //适配api11-api18,根据uri获取图片的绝对路径。
@@ -304,6 +405,7 @@ public class UserFragment extends Fragment implements View.OnClickListener, User
         tvTelChange.setText(user.getPhone());
         tvAddressChange.setText(user.getAddress());
         Picasso.with(getActivity()).load(new File(user.getImage())).transform(new CircleTransform()).error(R.drawable.head1).into(ivHeadChoice);
+
         imageBack = false;
     }
 

@@ -22,6 +22,7 @@ import com.codvision.figurinestore.utils.CircleTransform;
 import com.codvision.figurinestore.utils.SharedPreferenceUtils;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.List;
 
 public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
@@ -66,7 +67,7 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
             viewholder.leftlayout.setVisibility(View.VISIBLE);
             viewholder.ivLeft.setVisibility(View.VISIBLE);
             viewholder.ivRight.setVisibility(View.GONE);
-            Picasso.with(context).load(R.drawable.head2).error(R.drawable.head2).transform(new CircleTransform()).into( viewholder.ivLeft);
+            Picasso.with(context).load(SharedPreferenceUtils.getImage(context)).error(R.drawable.head2).transform(new CircleTransform()).into(viewholder.ivLeft);
             viewholder.rightlayout.setVisibility(View.GONE);
             viewholder.leftmsg.setText(msg.getContent());
         } else if (msg.getType() == Msg.TYPE_SENT) {
@@ -74,7 +75,7 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
             viewholder.rightlayout.setVisibility(View.VISIBLE);
             viewholder.ivLeft.setVisibility(View.GONE);
             viewholder.ivRight.setVisibility(View.VISIBLE);
-            Picasso.with(context).load(R.drawable.head1).error(R.drawable.head1).transform(new CircleTransform()).into( viewholder.ivRight);
+            Picasso.with(context).load(new File(SharedPreferenceUtils.getImage(context))).error(R.drawable.head1).transform(new CircleTransform()).into(viewholder.ivRight);
             viewholder.rightmsg.setText(msg.getContent());
         }
     }

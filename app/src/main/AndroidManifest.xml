@@ -21,9 +21,9 @@
         android:icon="@drawable/icon_figurine"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:usesCleartextTraffic="true"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
         <activity android:name=".ui.activity.OrderActivity"></activity>
         <activity android:name=".ui.activity.RegisterActivity" />
         <activity android:name=".ui.activity.GoodsTypeActivity" />
@@ -36,6 +36,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.codvision.figurinestore.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
+
+
         <activity android:name=".ui.activity.LoginActivity" />
         <activity android:name=".ui.activity.BuyDetailActivity" />
         <activity android:name=".ui.activity.SearchActivity" />

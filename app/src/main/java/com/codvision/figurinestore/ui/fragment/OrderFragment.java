@@ -42,6 +42,7 @@ public class OrderFragment extends Fragment implements OrderTableSelectContract.
     private List<OrderTableRecieve> orderTableRecieveList = new ArrayList<>();
     private TextView tvOn;
     private TextView tvOff;
+    private TextView tvClose;
     private int chocie = 1;
 
     @Nullable
@@ -64,6 +65,7 @@ public class OrderFragment extends Fragment implements OrderTableSelectContract.
         lvOrder = view.findViewById(R.id.lv_order);
         tvOn = view.findViewById(R.id.tv_order_state_on);
         tvOff = view.findViewById(R.id.tv_order_state_off);
+        tvClose = view.findViewById(R.id.tv_order_state_close);
         orderAdapter = new OrderAdapter(getActivity(), orderTableRecieveList);
         lvOrder.setAdapter(orderAdapter);
         orderTableSelectPresenter = new OrderTableSelectPresenter(this, getActivity());
@@ -84,6 +86,13 @@ public class OrderFragment extends Fragment implements OrderTableSelectContract.
             @Override
             public void onClick(View v) {
                 setClick(2, tvOff);
+                orderTableSelectPresenter.orderSelect(new OrderTableSelect(SharedPreferenceUtils.getUserId(getActivity())));
+            }
+        });
+        tvClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setClick(3, tvClose);
                 orderTableSelectPresenter.orderSelect(new OrderTableSelect(SharedPreferenceUtils.getUserId(getActivity())));
             }
         });
@@ -114,6 +123,7 @@ public class OrderFragment extends Fragment implements OrderTableSelectContract.
         this.chocie = chocie;
         tvOn.setSelected(false);
         tvOff.setSelected(false);
+        tvClose.setSelected(false);
         textView.setSelected(true);
     }
 
@@ -124,6 +134,8 @@ public class OrderFragment extends Fragment implements OrderTableSelectContract.
             if (chocie == 1 && "未支付".equals(orderTableRecieveArrayList.get(i).getState())) {
                 this.orderTableRecieveList.add(orderTableRecieveArrayList.get(i));
             } else if (chocie == 2 && "已完成".equals(orderTableRecieveArrayList.get(i).getState())) {
+                this.orderTableRecieveList.add(orderTableRecieveArrayList.get(i));
+            } else if (chocie == 3 && "已发货".equals(orderTableRecieveArrayList.get(i).getState())) {
                 this.orderTableRecieveList.add(orderTableRecieveArrayList.get(i));
             }
         }
